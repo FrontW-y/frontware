@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="systeme.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers.h" />
