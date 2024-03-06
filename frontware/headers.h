@@ -1,13 +1,7 @@
 #pragma once
 
-#ifdef _WIN32
 #define USERNAME_LENGHT 0x101
-#define COMPUTER_NAME_LENGHT 0x10
-#define CPU_INFO_LENGHT 0x40
-#endif
+#define COMPUTER_NAME_LENGHT 0x101
+#define CPU_INFO_LENGHT 0x101
 
-#ifdef __linux__
 
-#define USERNAME_LENGHT 0x40
-
-#endif

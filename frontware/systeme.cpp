@@ -1,16 +1,45 @@
-#pragma once
-
 #include "systeme.h"
 
+
+
 bool Systeme::setUsername() {
-	try {
-		LPWSTR buff;
-		GetUserName(buff, (LPDWORD)USERNAME_LENGHT);
-		this->_username = buff;
+
+		WCHAR buff[USERNAME_LENGHT];
+		if (GetUserNameW(buff, (LPDWORD)USERNAME_LENGHT)) {
+			wcstombs_s(nullptr, _username, buff, _TRUNCATE);
+			return true;
+		}
+		else {
+			return false;
+		}
+}
+
+bool Systeme::setComputerName() {
+	WCHAR buff[COMPUTER_NAME_LENGHT];
+	if (GetComputerNameW(buff, (LPDWORD)COMPUTER_NAME_LENGHT)) {
+		wcstombs_s(nullptr, _username, buff, _TRUNCATE);
+		return true;
+	}
+	else {
+		return false;
 	}
 }
 
-char* Systeme::getUsername() {
-	return this->_username;
+bool Systeme::setCPU() {
+//implementing set cpu
 }
+
+char* Systeme::getUsername() {
+	return _username;
+}
+
+char* Systeme::getComputerName() {
+	return _computername;
+}
+
+char* Systeme::getCPU() {
+	return _CPUBrandString;
+}
+
+
 
