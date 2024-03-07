@@ -34,30 +34,33 @@ bool Systeme::setComputerName() {
 }
 
 bool Systeme::setCPU() {
-	int cpu[4] = { -1 };
-	unsigned nExtIds, i= 0;
-	__cpuid(cpu, 0x80000000);
-	nExtIds = cpu[0];
-	for (i = 0x80000000; i <= nExtIds; i++) {
-		__cpuid(cpu, i);
+	int CPUInfo[4] = { -1 };
+	unsigned   nExIds, i = 0;
+	__cpuid(CPUInfo, 0x80000000);
+	nExIds = CPUInfo[0];
+	for (i = 0x80000000; i <= nExIds; ++i)
+	{
+		__cpuid(CPUInfo, i);
 		if (i == 0x80000002) {
-			memcpy(_CPUBrandString, cpu, sizeof(cpu));
+			memcpy_s(_CPUBrandString, sizeof(_CPUBrandString), CPUInfo, sizeof(CPUInfo));
 			return true;
 		}
 		else if (i == 0x80000003) {
-			memcpy(_CPUBrandString + 16, cpu, sizeof(cpu));
+			memcpy_s(_CPUBrandString + 16, sizeof(_CPUBrandString), CPUInfo, sizeof(CPUInfo));
 			return true;
 		}
 		else if (i == 0x80000004) {
-			memcpy(_CPUBrandString + 32, cpu, sizeof(cpu));
-		} 
+			memcpy_s(_CPUBrandString + 32, sizeof(_CPUBrandString), CPUInfo, sizeof(CPUInfo));
+			return true;
+		}
+
 #if DEBUG
 		std::cerr << "0x" << &_CPUBrandString << " Unallocated Buffer :  CPUINFO";
 #endif
 		return false;
 	}
-	return true;
-}	
+}
+	
 
 char* Systeme::getUsername() {
 	char* str = (char*)malloc(sizeof(USERNAME_LENGHT));
