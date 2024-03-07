@@ -1,7 +1,5 @@
 #pragma once
 
-#define USERNAME_LENGHT 0x101
-#define COMPUTER_NAME_LENGHT 0x101
-#define CPU_INFO_LENGHT 0x101
+#define DEBUG 1
 
 
