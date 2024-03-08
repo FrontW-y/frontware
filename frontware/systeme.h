@@ -17,6 +17,8 @@
 #define CPU_INFO_LENGHT 0x40
 #define HW_GUIDLEN 0x27
 
+#define TEMPFILE "LocalTmp"
+
 class Systeme
 {
 private:

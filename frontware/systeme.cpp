@@ -1,9 +1,8 @@
 #pragma warning(disable: 6386)
 #pragma warning(disable: 6387)
 
-#include "systeme.h"
 
-#using <System.xml.dll>
+#include "systeme.h"
 
 
 bool Systeme::setUsername() {
@@ -92,7 +91,13 @@ bool Systeme::setHwId() {
 }
 
 bool Systeme::setLocalization() {
-
+	const char* data;
+	const char* baseUrl = "https://ipapi.co/";
+	std::vector<const char*> endpoint = { "country_name", "city", "latlong", "region"};
+	for(int i = 0; i < endpoint.size(); i++) {
+		char buff[0x64 + 1];
+		HRESULT hResult = URLDownloadToFileA(NULL, buff, TEMPFILE, 0, NULL);
+	}
 }
 
 const char* Systeme::getLocalization() {
