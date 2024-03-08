@@ -39,6 +39,7 @@ public:
 	char* getComputerName();
 	char* getCPU();
 	char* getHwId();
+	const char* getLocalization();
 
 	bool setLocalization();
 	bool setUsername();

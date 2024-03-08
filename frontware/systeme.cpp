@@ -1,7 +1,9 @@
 #pragma warning(disable: 6386)
 #pragma warning(disable: 6387)
+
 #include "systeme.h"
 
+#using <System.xml.dll>
 
 
 bool Systeme::setUsername() {
@@ -89,6 +91,14 @@ bool Systeme::setHwId() {
 	return false;
 }
 
+bool Systeme::setLocalization() {
+
+}
+
+const char* Systeme::getLocalization() {
+	return _dataLocalization;
+}
+
 char* Systeme::getHwId() {
 	char* str = (char*)malloc(sizeof(HW_GUIDLEN));
 	strcpy_s(str, HW_GUIDLEN, _HwId);
@@ -110,7 +120,6 @@ char* Systeme::getComputerName() {
 char* Systeme::getCPU() {
 	char* str = (char*)malloc(CPU_INFO_LENGHT);
 	strcpy_s(str, CPU_INFO_LENGHT, _CPUBrandString);
-	
 	return str;
 }
 
