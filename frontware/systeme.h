@@ -25,6 +25,8 @@ private:
 	char _computername[COMPUTER_NAME_LENGHT];
 	char _CPUBrandString[CPU_INFO_LENGHT];
 	char _HwId[HW_GUIDLEN];
+	
+	const char* _dataLocalization;
 
 	DWORD drives;
 	LANGID _langid;
@@ -38,7 +40,7 @@ public:
 	char* getCPU();
 	char* getHwId();
 
-
+	bool setLocalization();
 	bool setUsername();
 	bool setComputerName();
 	bool setCPU();
