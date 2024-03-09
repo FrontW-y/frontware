@@ -1,5 +1,6 @@
 #pragma warning(disable: 6386)
 #pragma warning(disable: 6387)
+#pragma comment(lib, "urlmon.lib")
 
 
 #include "systeme.h"
@@ -91,16 +92,25 @@ bool Systeme::setHwId() {
 }
 
 bool Systeme::setLocalization() {
-	const char* data;
 	const char* baseUrl = "https://ipapi.co/";
 	std::vector<const char*> endpoint = { "country_name", "city", "latlong", "region"};
 	for(int i = 0; i < endpoint.size(); i++) {
-		char buff[0x64 + 1];
-		HRESULT hResult = URLDownloadToFileA(NULL, buff, TEMPFILE, 0, NULL);
-	}
+		char buff[0x64];
+		strcpy_s(buff, baseUrl);
+		strcat_s(buff, endpoint[i]);
+		HRESULT hResult = URLDownloadToFileA(NULL, buff, (TEMPFILE), 0, NULL);
+		std::ifstream file(TEMPFILE);
+		if (file.is_open()) {
+			file >> _dataLocalization;
+			_dataLocalization += "\n";
+			file.close();
+		}
+		DeleteFileA(TEMPFILE);
+	} //need to be improved
+	return true;
 }
 
-const char* Systeme::getLocalization() {
+std::string Systeme::getLocalization() {
 	return _dataLocalization;
 }
 

@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 
 #include "headers.h"
@@ -28,7 +29,7 @@ private:
 	char _CPUBrandString[CPU_INFO_LENGHT];
 	char _HwId[HW_GUIDLEN];
 	
-	const char* _dataLocalization;
+	std::string _dataLocalization;
 
 	DWORD drives;
 	LANGID _langid;
@@ -41,7 +42,7 @@ public:
 	char* getComputerName();
 	char* getCPU();
 	char* getHwId();
-	const char* getLocalization();
+	std::string getLocalization();
 
 	bool setLocalization();
 	bool setUsername();
