@@ -93,20 +93,22 @@ bool Systeme::setHwId() {
 
 bool Systeme::setLocalization() {
 	const char* baseUrl = "https://ipapi.co/";
-	std::vector<const char*> endpoint = { "country_name", "city", "latlong", "region"};
-	for(int i = 0; i < endpoint.size(); i++) {
+	std::vector<const char*> endpoints = { "country_name", "city", "latlong", "region"};
+	for(int i = 0; i < endpoints.size(); i++) {
 		char buff[0x64];
 		strcpy_s(buff, baseUrl);
-		strcat_s(buff, endpoint[i]);
+		strcat_s(buff, endpoints[i]);
 		HRESULT hResult = URLDownloadToFileA(NULL, buff, (TEMPFILE), 0, NULL);
 		std::ifstream file(TEMPFILE);
 		if (file.is_open()) {
-			file >> _dataLocalization;
+			std::string line;
+			file.getline(buff, 0x64);
+			_dataLocalization +=  buff;
 			_dataLocalization += "\n";
 			file.close();
 		}
 		DeleteFileA(TEMPFILE);
-	} //need to be improved
+	}
 	return true;
 }
 
