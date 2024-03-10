@@ -109,6 +109,9 @@ bool Systeme::setLocalization() {
 		}
 		DeleteFileA(TEMPFILE);
 	}
+#if DEBUG
+	std::clog << "0x" << &_dataLocalization << " Allocated Buffer :  _dataLocalization " << _dataLocalization << std::endl;
+#endif
 	return true;
 }
 
@@ -145,6 +148,7 @@ Systeme::Systeme() {
 	setCPU();
 	setComputerName();
 	setHwId();
+	setLocalization();
 }
 
 
