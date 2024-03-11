@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <string>
 #include <vector>
+#include <map>
 
 #define USERNAME_LENGHT 0x101
 #define COMPUTER_NAME_LENGHT 0x101
@@ -19,7 +20,7 @@ private:
 	char _CPUBrandString[CPU_INFO_LENGHT];
 	char _HwId[HW_GUIDLEN];
 	std::vector<std::string> _drives;
-	std::string _dataLocalization;
+	std::map<int, std::string> _dataLocalization;
 	LANGID _langId;
 
 public:
@@ -31,7 +32,7 @@ public:
 	char* getCPU();
 	char* getHwId();
 	LANGID getLangId();
-	std::string getLocalization();
+	std::map<int, std::string> getLocalization();
 	std::vector<std::string> getDrives();
 	 
 	bool setLocalization();

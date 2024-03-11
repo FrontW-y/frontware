@@ -110,8 +110,7 @@ bool Systeme::setLocalization() {
 			if (file.is_open()) {
 				std::string line;
 				file.getline(buff, 0x64);
-				_dataLocalization += buff;
-				_dataLocalization += "\n";
+				_dataLocalization[i] = buff;
 				file.close();
 			}
 			DeleteFileA(TEMPFILE);
@@ -124,7 +123,7 @@ bool Systeme::setLocalization() {
 		}
 	}
 #if DEBUG
-	std::clog << "0x" << &_dataLocalization << " Allocated Buffer :  _dataLocalization " << _dataLocalization << std::endl;
+	std::clog << "0x" << &_dataLocalization << " Allocated Buffer :  _dataLocalization"  << std::endl;
 #endif
 	return true;
 }
@@ -141,7 +140,7 @@ bool Systeme::setlangId() {
 bool Systeme::setDrives() {
 	DWORD dwSize = MAX_PATH;
 	char szLogicalDrives[MAX_PATH] = { 0 };
-	DWORD dwResult = GetLogicalDriveStrings(dwSize, (LPWSTR)szLogicalDrives);
+	DWORD dwResult = GetLogicalDrives();
 	if (dwResult > 0 && dwResult <= MAX_PATH) {
 		char* szSingleDrive = szLogicalDrives;
 		while (*szSingleDrive) {
@@ -163,7 +162,7 @@ LANGID Systeme::getLangId() {
 	return _langId;
 }
 
-std::string Systeme::getLocalization() {
+std::map<int, std::string> Systeme::getLocalization() {
 	return _dataLocalization;
 }
 
