@@ -1,17 +1,7 @@
 #pragma once
 
-
 #include <Windows.h>
-#include <Lmcons.h>
-#include <intrin.h>
-
-
-#include <iostream>
-#include <vector>
-#include <fstream>
-
-
-#include "headers.h"
+#include <string>
 
 #define USERNAME_LENGHT 0x101
 #define COMPUTER_NAME_LENGHT 0x101
@@ -28,10 +18,7 @@ private:
 	char _computername[COMPUTER_NAME_LENGHT];
 	char _CPUBrandString[CPU_INFO_LENGHT];
 	char _HwId[HW_GUIDLEN];
-	
 	std::string _dataLocalization;
-
-	DWORD drives;
 	LANGID _langid;
 
 public:
@@ -42,12 +29,16 @@ public:
 	char* getComputerName();
 	char* getCPU();
 	char* getHwId();
+
+	LANGID getLangId();
 	std::string getLocalization();
+	
 
 	bool setLocalization();
 	bool setUsername();
 	bool setComputerName();
 	bool setCPU();
 	bool setHwId();
+	bool setlangId();
 
 };

