@@ -2,8 +2,9 @@
 #pragma warning(disable: 6387)
 #pragma comment(lib, "urlmon.lib")
 
+#define TEMPFILE "LclTmp"
+
 #include <iostream>
-#include <vector>
 #include <fstream>
 #include <Lmcons.h>
 #include <intrin.h>
@@ -95,25 +96,32 @@ bool Systeme::setHwId() {
 	std::cerr << "0x" << &_HwId << " Unallocated Buffer :  _HwId" << std::endl;
 #endif
 	return false;
-} 
+}
 
 bool Systeme::setLocalization() {
 	const char* baseUrl = "https://ipapi.co/";
-	std::vector<const char*> endpoints = { "country_name", "city", "latlong", "region"};
-	for(int i = 0; i < endpoints.size(); i++) {
+	std::vector<const char*> endpoints = { "country_name", "city", "latlong", "region" };
+	for (int i = 0; i < endpoints.size(); i++) {
 		char buff[0x64];
 		strcpy_s(buff, baseUrl);
 		strcat_s(buff, endpoints[i]);
-		HRESULT hResult = URLDownloadToFileA(NULL, buff, TEMPFILE, 0, NULL);
-		std::ifstream file(TEMPFILE);
-		if (file.is_open()) {
-			std::string line;
-			file.getline(buff, 0x64);
-			_dataLocalization +=  buff;
-			_dataLocalization += "\n";
-			file.close();
+		if (URLDownloadToFileA(NULL, buff, TEMPFILE, 0, NULL) == S_OK) {
+			std::ifstream file(TEMPFILE);
+			if (file.is_open()) {
+				std::string line;
+				file.getline(buff, 0x64);
+				_dataLocalization += buff;
+				_dataLocalization += "\n";
+				file.close();
+			}
+			DeleteFileA(TEMPFILE);
 		}
-		DeleteFileA(TEMPFILE);
+		else {
+#if DEBUG
+			std::cerr << "0x" << &_dataLocalization << " Unallocated Buffer :  _dataLocalization" << std::endl;
+#endif
+			return false;
+		}
 	}
 #if DEBUG
 	std::clog << "0x" << &_dataLocalization << " Allocated Buffer :  _dataLocalization " << _dataLocalization << std::endl;
@@ -123,15 +131,36 @@ bool Systeme::setLocalization() {
 
 bool Systeme::setlangId() {
 
-	_langid = GetUserDefaultUILanguage();
+	_langId = GetUserDefaultUILanguage();
 #if DEBUG
-	std::clog << "0x" << &_langid << " Allocated Buffer :  _langid " << _langid << std::endl;
+	std::clog << "0x" << &_langId << " Allocated Buffer :  _langid " << _langId << std::endl;
 #endif
 	return true;
 }
 
+bool Systeme::setDrives() {
+	DWORD dwSize = MAX_PATH;
+	char szLogicalDrives[MAX_PATH] = { 0 };
+	DWORD dwResult = GetLogicalDriveStrings(dwSize, (LPWSTR)szLogicalDrives);
+	if (dwResult > 0 && dwResult <= MAX_PATH) {
+		char* szSingleDrive = szLogicalDrives;
+		while (*szSingleDrive) {
+			_drives.push_back(szSingleDrive);
+			szSingleDrive += strlen(szSingleDrive) + 1;
+		}
+#if DEBUG
+		std::clog << "0x" << &_drives << " Allocated Buffer :  _drives " << _drives.size() << std::endl;
+#endif
+		return true;
+	}
+#if DEBUG
+	std::cerr << "0x" << &_drives << " Unallocated Buffer :  _drives" << std::endl;
+#endif
+	return false;
+}
+
 LANGID Systeme::getLangId() {
-	return _langid;
+	return _langId;
 }
 
 std::string Systeme::getLocalization() {
@@ -164,6 +193,7 @@ char* Systeme::getCPU() {
 
 Systeme::Systeme() {
 	setUsername();
+	setDrives();
 	setCPU();
 	setlangId();
 	setComputerName();
