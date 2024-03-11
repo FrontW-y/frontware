@@ -1,8 +1,11 @@
 #include "systeme.h"
+#include <iostream>
 
 int main(void) {
-	Systeme sys;
-	//std::cout << sys.getLocalization() << std::endl;
 
+
+	Systeme sys;
+
+	
 	return 0;
 }

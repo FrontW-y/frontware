@@ -138,28 +138,33 @@ bool Systeme::setlangId() {
 }
 
 bool Systeme::setDrives() {
-	DWORD dwSize = MAX_PATH;
-	char szLogicalDrives[MAX_PATH] = { 0 };
-	DWORD dwResult = GetLogicalDrives();
-	if (dwResult > 0 && dwResult <= MAX_PATH) {
-		char* szSingleDrive = szLogicalDrives;
-		while (*szSingleDrive) {
-			_drives.push_back(szSingleDrive);
-			szSingleDrive += strlen(szSingleDrive) + 1;
+	char* lDrives = new char[MAX_PATH];
+	if (lDrives == nullptr) {
+		return false; 
+	}
+	if (GetLogicalDriveStringsA(MAX_PATH, lDrives)) {
+		for (char* drive = lDrives; *drive != '\0'; drive += 4) {
+			_drives.push_back(std::string(drive, drive + 3));
 		}
+		delete[] lDrives;
 #if DEBUG
 		std::clog << "0x" << &_drives << " Allocated Buffer :  _drives " << _drives.size() << std::endl;
-#endif
+		#endif
 		return true;
 	}
-#if DEBUG
+	delete[] lDrives;
+	#if DEBUG
 	std::cerr << "0x" << &_drives << " Unallocated Buffer :  _drives" << std::endl;
-#endif
+	#endif
 	return false;
 }
 
 LANGID Systeme::getLangId() {
 	return _langId;
+}
+
+std::vector<std::string> Systeme::getDrives() {
+	return _drives;
 }
 
 std::map<int, std::string> Systeme::getLocalization() {
@@ -199,5 +204,3 @@ Systeme::Systeme() {
 	setHwId();
 	setLocalization();
 }
-
-
