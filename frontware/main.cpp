@@ -1,24 +1,23 @@
 #include "systeme.h"
 #include <iostream>
 #include <thread>
+#include <wincrypt.h>
 #include "headers.h"
 
 int main(void) {
-
-#if DEBUG
-	std::cout << "DEBUG MODE" << std::endl;
-#else
-	::ShowWindow(::GetConsoleWindow(), SW_HIDE);
-#endif
 
 	HANDLE hMutex = CreateMutex(NULL, TRUE, L"b29wc2llIHRoYXRzIHNhZCBmb3IgeW91IF5e=");
 	if (ERROR_ALREADY_EXISTS == GetLastError()) {
 		return 1;
 	}
 
-
-
 	Systeme sys;
+	std::cout << "Username : " << sys.getUsername() << std::endl;
+	std::cout << "Computer Name : " << sys.getComputerName() << std::endl;
+	std::cout << "CPU : " << sys.getCPU() << std::endl;
+	std::cout << "HwId : " << sys.getHwId() << std::endl;
+	std::cout << "LangId : " << sys.getLangId() << std::endl;
+	std::cout << "OsVersion : " << sys.getOsVersion() << std::endl;
 
 
 	

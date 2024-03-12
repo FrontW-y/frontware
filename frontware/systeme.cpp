@@ -1,13 +1,14 @@
+#pragma once
 #pragma warning(disable: 6386)
 #pragma warning(disable: 6387)
 #pragma comment(lib, "urlmon.lib")
-
 #define TEMPFILE "LclTmp"
 
 #include <iostream>
 #include <fstream>
 #include <Lmcons.h>
 #include <intrin.h>
+#include <VersionHelpers.h>
 
 #include "systeme.h"
 #include "headers.h"
@@ -159,8 +160,41 @@ bool Systeme::setDrives() {
 	return false;
 }
 
+void Systeme::setOsVersion() {
+	if (IsWindows10OrGreater) {
+		_osVersion = WIN_10;
+	}
+	else if (IsWindows8Point1OrGreater) {
+		_osVersion = WIN_8_1;
+	}
+	else if (IsWindows8OrGreater) {
+		_osVersion = WIN_8;
+	}
+	else if (IsWindows7OrGreater) {
+		_osVersion = WIN_7;
+	}
+	else if (IsWindowsVistaOrGreater) {
+		_osVersion = WIN_VISTA;
+	}
+	else if (IsWindowsXPOrGreater) {
+		_osVersion = WIN_XP;
+	}
+	else if (IsWindowsServer) {
+		_osVersion = WIN_SERV;
+	}
+	
+	else {
+		_osVersion = WIN_VERSION_UNKNOWN;	
+
+	}
+}
+
 LANGID Systeme::getLangId() {
 	return _langId;
+}
+
+Systeme::osVersion Systeme::getOsVersion() {
+	return _osVersion;
 }
 
 std::vector<std::string> Systeme::getDrives() {
@@ -203,4 +237,5 @@ Systeme::Systeme() {
 	setComputerName();
 	setHwId();
 	setLocalization();
+	setOsVersion();
 }
