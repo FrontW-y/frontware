@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Windows.h>
+#include <VersionHelpers.h>
+
 #include <string>
 #include <vector>
 #include <map>
@@ -65,7 +67,6 @@ public:
 	bool setHwId();
 	bool setlangId();
 	bool setDrives();
-
 	void setOsVersion();
 
 };

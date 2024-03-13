@@ -1,7 +1,6 @@
 #include "systeme.h"
 #include <iostream>
 #include <thread>
-#include <wincrypt.h>
 #include "headers.h"
 
 int main(void) {

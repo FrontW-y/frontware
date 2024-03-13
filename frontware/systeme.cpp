@@ -1,4 +1,3 @@
-#pragma once
 #pragma warning(disable: 6386)
 #pragma warning(disable: 6387)
 #pragma comment(lib, "urlmon.lib")
@@ -8,7 +7,7 @@
 #include <fstream>
 #include <Lmcons.h>
 #include <intrin.h>
-#include <VersionHelpers.h>
+
 
 #include "systeme.h"
 #include "headers.h"
@@ -185,8 +184,10 @@ void Systeme::setOsVersion() {
 	
 	else {
 		_osVersion = WIN_VERSION_UNKNOWN;	
-
 	}
+#if DEBUG
+	std::clog << "0x" << &_osVersion << " Allocated Buffer :  _osVersion " << _osVersion << std::endl;
+	#endif
 }
 
 LANGID Systeme::getLangId() {
