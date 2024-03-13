@@ -15,7 +15,7 @@
 
 class Systeme
 {
-
+	
 private:
 
 	enum osVersion {
@@ -31,7 +31,6 @@ private:
 		WIN_8 = 0x0A,
 		WIN_8_1 = 0x0B,
 		WIN_10 = 0x0C,
-		WIN_11 = 0x0D,
 		WIN_SERV = 0x0E,
 		WIN_VERSION_UNKNOWN = 0x0F
 	};

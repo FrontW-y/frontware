@@ -23,6 +23,7 @@
     <ClCompile Include="systeme.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="fileEncryptor.h" />
     <ClInclude Include="headers.h" />
     <ClInclude Include="systeme.h" />
   </ItemGroup>
