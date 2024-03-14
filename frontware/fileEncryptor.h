@@ -12,9 +12,16 @@ private:
 	std::string _aesKey;
 
 public:
-	FileEncryptor(std::string disks);
+
+	FileEncryptor(std::string disk, std::string aesKey, std::string rsaKey);
 	~FileEncryptor();
 
-	bool EncryptFile(const char* file, const char* password);
+	bool aesEncryptFile(const char* file, std::string& aesKey);
+	bool rsaEncryptFile(const char* file, std::string& rsaKey);
+
+	bool setRsaKey(std::string rsaKey);
+	bool setAesKey(std::string aesKey);
+	bool setDisk(std::string disk);
+	
 
 };

