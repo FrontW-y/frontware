@@ -14,9 +14,6 @@ int main(void) {
 	}
 	Systeme sys;
 
-	std::string disk = sys.getDrives().at(0);
-
-	FileEncryptor fileEncryptor(disk, (std::string)"AES", (std::string)"RSA");
 	
 
 

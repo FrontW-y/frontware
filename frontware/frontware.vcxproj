@@ -19,13 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="fileEncryptor.cpp" />
+    <ClCompile Include="diskencryptor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="systeme.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="fileEncryptor.h" />
+    <ClInclude Include="diskencryptor.h" />
     <ClInclude Include="headers.h" />
+    <ClInclude Include="obfuscate.h" />
     <ClInclude Include="systeme.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -87,6 +88,9 @@
     <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <VcpkgUseStatic>true</VcpkgUseStatic>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
