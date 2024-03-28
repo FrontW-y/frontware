@@ -22,8 +22,8 @@ int main(void) {
 	CryptoPP::SecByteBlock  key(CryptoPP::AES::DEFAULT_KEYLENGTH);
 	CryptoPP::SecByteBlock  iv(CryptoPP::AES::BLOCKSIZE);
 
-	prng.GenerateBlock(key.data(), sizeof(key));
-	prng.GenerateBlock(iv.data(), sizeof(iv));
+	prng.GenerateBlock(key.data(), key.size());
+	prng.GenerateBlock(iv.data(), iv.size());
 
 #if DEBUG
 	std::clog << "0x" << &key << " Allocated Buffer :  key " << sizeof(key) << std::endl;
