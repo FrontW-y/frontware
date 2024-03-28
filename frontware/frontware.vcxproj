@@ -19,13 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="aes.cpp" />
     <ClCompile Include="diskencryptor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="systeme.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="aes.h" />
     <ClInclude Include="diskencryptor.h" />
     <ClInclude Include="headers.h" />
     <ClInclude Include="obfuscate.h" />

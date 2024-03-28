@@ -1,6 +1,8 @@
 #include "diskencryptor.h"
+
 #include <iostream>
 #include <Windows.h>
+#include <cryptopp/ccm.h>
 
 bool DiskEncryptor::setDisk(std::string disk)
 {
@@ -32,10 +34,23 @@ bool DiskEncryptor::setFreeSpace()
 	}
 }
 
-DiskEncryptor::DiskEncryptor(std::string disk)
+DiskEncryptor::DiskEncryptor(std::string disk, CryptoPP::SecByteBlock& key, CryptoPP::SecByteBlock& iv)
 {
 	setDisk(disk);
 	setFreeSpace();
+
+	CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption e;
+#if DEBUG
+	std::clog << "0x" << &e << " Allocated Buffer :  e " << std::endl;
+	std::clog << "sizeof(key) : " << key.size() << std::endl;
+#endif
+
+
+	e.SetKeyWithIV(key.data(), sizeof(key), iv.data(), sizeof(iv));
+#if DEBUG
+	std::clog << "0x" << &e << " Allocated Buffer :  e " << std::endl;
+	std::clog << "sizeof(key) : " << sizeof(key) << std::endl;
+	#endif
 
 }
 

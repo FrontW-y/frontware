@@ -29,7 +29,7 @@ private:
 
 public:
 
-	DiskEncryptor(std::string disk);
+	DiskEncryptor(std::string disk, CryptoPP::SecByteBlock& key, CryptoPP::SecByteBlock& iv);
 	~DiskEncryptor();
 
 	bool setDisk(std::string disk);
