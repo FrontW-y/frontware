@@ -4,17 +4,66 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "72101c8f469cc44b8806e95314197d4d",
-    "packages": [],
+    "content-hash": "e51a749e59f4a8b3d8d7c98629841098",
+    "packages": [
+        {
+            "name": "bitcoin-php/bitcoin-ecdsa",
+            "version": "1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/BitcoinPHP/BitcoinECDSA.php.git",
+                "reference": "9ee35c58a23e17141787bc875f297046b436e13d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/BitcoinPHP/BitcoinECDSA.php/zipball/9ee35c58a23e17141787bc875f297046b436e13d",
+                "reference": "9ee35c58a23e17141787bc875f297046b436e13d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "BitcoinPHP\\BitcoinECDSA": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "unlicense"
+            ],
+            "authors": [
+                {
+                    "name": "BitcoinPHP",
+                    "email": "panda@panda.cat",
+                    "homepage": "http://github.com/BitcoinPHP",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP library allowing to generate BTC addresses from private keys",
+            "homepage": "https://github.com/BitcoinPHP/BitcoinECDSA.php",
+            "keywords": [
+                "ECDSA",
+                "bitcoin"
+            ],
+            "support": {
+                "issues": "https://github.com/BitcoinPHP/BitcoinECDSA.php/issues",
+                "source": "https://github.com/BitcoinPHP/BitcoinECDSA.php/tree/master"
+            },
+            "time": "2014-08-29T17:47:15+00:00"
+        }
+    ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": [],
-    "prefer-stable": true,
+    "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": {
-        "php": "*"
-    },
+    "platform": [],
     "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }

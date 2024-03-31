@@ -4,8 +4,18 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit72101c8f469cc44b8806e95314197d4d
+class ComposerStaticInit8d9693aaa943fe39605d79b93a2fa86d
 {
+    public static $prefixesPsr0 = array (
+        'B' => 
+        array (
+            'BitcoinPHP\\BitcoinECDSA' => 
+            array (
+                0 => __DIR__ . '/..' . '/bitcoin-php/bitcoin-ecdsa/src',
+            ),
+        ),
+    );
+
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
@@ -13,7 +23,8 @@ class ComposerStaticInit72101c8f469cc44b8806e95314197d4d
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit72101c8f469cc44b8806e95314197d4d::$classMap;
+            $loader->prefixesPsr0 = ComposerStaticInit8d9693aaa943fe39605d79b93a2fa86d::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit8d9693aaa943fe39605d79b93a2fa86d::$classMap;
 
         }, null, ClassLoader::class);
     }
