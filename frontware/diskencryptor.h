@@ -38,9 +38,6 @@ public:
 	bool setEncryption(CryptoPP::SecByteBlock& key, CryptoPP::SecByteBlock& iv);
 
 	bool fileEncrypt(std::string file);
+	bool safeFileDeletation(std::string& file);
 	void iterateFiles();
-
-	std::string* getDisk();
-
-
 };

