@@ -34,6 +34,16 @@ switch ($action){
         }
         break;
 
+    case 'getPublicKey':
+        if (isset($_POST['uuid'])){
+            $uuid = $_POST['uuid'];
+            $publicKey = Wallet::getUuidPublicKey($uuid);
+            echo $publicKey;
+        } else {
+            echo json_encode(false);
+        }
+        break;
+
     case 'checkBalance':
         if (isset($_POST['uuid'])){
             $uuid = $_POST['uuid'];

