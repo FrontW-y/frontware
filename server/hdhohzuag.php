@@ -1,7 +1,7 @@
 <?php
 
-require_once '../Model/user.php';
-require_once '../Model/wallet.php';
+require_once './Model/user.php';
+require_once './Model/wallet.php';
 
 
 $action = $_GET['action'];

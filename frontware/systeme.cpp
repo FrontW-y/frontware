@@ -19,15 +19,9 @@ bool Systeme::setUsername() {
 	DWORD size = USERNAME_LENGHT; ;
 	if (GetUserNameW(buff, &size)) {
 		wcstombs_s(nullptr, _username, buff, _TRUNCATE);
-#if DEBUG
-		std::cerr << "0x" << &_username << " Allocated Buffer :  _username  " << _username << std::endl;
-#endif
 		return true;
 	}
 	else {
-#if DEBUG
-		std::cerr << "0x" << &_username << " Unallocated Buffer :  _username" << std::endl;
-#endif
 		return false;
 	}
 }
@@ -37,15 +31,9 @@ bool Systeme::setComputerName() {
 	DWORD size = USERNAME_LENGHT;
 	if (GetComputerNameW(buff, &size)) {
 		wcstombs_s(nullptr, _computername, buff, _TRUNCATE);
-#if DEBUG
-		std::clog << "0x" << &_computername << " Allocated Buffer :  _computername  " << _computername << std::endl;
-#endif
 		return true;
 	}
 	else {
-#if DEBUG
-		std::cerr << "0x" << &_computername << " Unallocated Buffer :  _computername" << std::endl;
-#endif
 		return false;
 	}
 }
@@ -70,15 +58,9 @@ bool Systeme::setCPU() {
 		}
 	}
 	if (_CPUBrandString) {
-#if DEBUG
-		std::clog << "0x" << &_CPUBrandString << " Allocated Buffer :  _CPUBrandString  " << _CPUBrandString << std::endl;
-#endif
 		return true;
 	}
 	else {
-#if DEBUG
-		std::cerr << "0x" << &_CPUBrandString << " Unallocated Buffer :  _CPUBrandString" << std::endl;
-#endif
 		return false;
 	}
 }
@@ -87,14 +69,8 @@ bool Systeme::setHwId() {
 	HW_PROFILE_INFO hwProfileInfo;
 	if (GetCurrentHwProfileW(&hwProfileInfo)) {
 		wcstombs_s(nullptr, _HwId, hwProfileInfo.szHwProfileGuid, _TRUNCATE);
-#if DEBUG
-		std::clog << "0x" << &_HwId << " Allocated Buffer :  _HwId " << _HwId << std::endl;
-#endif
 		return true;
 	}
-#if DEBUG
-	std::cerr << "0x" << &_HwId << " Unallocated Buffer :  _HwId" << std::endl;
-#endif
 	return false;
 }
 
@@ -116,24 +92,14 @@ bool Systeme::setLocalization() {
 			DeleteFileA(TEMPFILE);
 		}
 		else {
-#if DEBUG
-			std::cerr << "0x" << &_dataLocalization << " Unallocated Buffer :  _dataLocalization" << std::endl;
-#endif
 			return false;
 		}
 	}
-#if DEBUG
-	std::clog << "0x" << &_dataLocalization << " Allocated Buffer :  _dataLocalization"  << std::endl;
-#endif
 	return true;
 }
 
 bool Systeme::setlangId() {
-
 	_langId = GetUserDefaultUILanguage();
-#if DEBUG
-	std::clog << "0x" << &_langId << " Allocated Buffer :  _langid " << _langId << std::endl;
-#endif
 	return true;
 }
 
@@ -147,15 +113,9 @@ bool Systeme::setDrives() {
 			_drives.push_back(std::string(drive, drive + 3));
 		}
 		delete[] lDrives;
-#if DEBUG
-		std::clog << "0x" << &_drives << " Allocated Buffer :  _drives " << _drives.size() << std::endl;
-		#endif
 		return true;
 	}
 	delete[] lDrives;
-	#if DEBUG
-	std::cerr << "0x" << &_drives << " Unallocated Buffer :  _drives" << std::endl;
-	#endif
 	return false;
 }
 
@@ -185,9 +145,6 @@ void Systeme::setOsVersion() {
 	else {
 		_osVersion = WIN_VERSION_UNKNOWN;	
 	}
-#if DEBUG
-	std::clog << "0x" << &_osVersion << " Allocated Buffer :  _osVersion " << _osVersion << std::endl;
-	#endif
 }
 
 LANGID Systeme::getLangId() {
@@ -206,29 +163,26 @@ std::map<int, std::string> Systeme::getLocalization() {
 	return _dataLocalization;
 }
 
-char* Systeme::getHwId() {
-	char* str = (char*)malloc(sizeof(HW_GUIDLEN));
-	strcpy_s(str, HW_GUIDLEN, _HwId);
+std::string Systeme::getHwId() {
+	std::string str(_HwId);
 	return str;
 }
 
-char* Systeme::getUsername() {
-	char* str = (char*)malloc(sizeof(USERNAME_LENGHT));
-	strcpy_s(str, USERNAME_LENGHT, _username);
+std::string Systeme::getUsername() {
+	std::string str(_username);
 	return str;
 }
 
-char* Systeme::getComputerName() {
-	char* str = (char*)malloc(COMPUTER_NAME_LENGHT);
-	strcpy_s(str, COMPUTER_NAME_LENGHT, _computername);
+std::string Systeme::getComputerName() {
+	std::string str(_computername);
 	return str;
 }
 
-char* Systeme::getCPU() {
-	char* str = (char*)malloc(CPU_INFO_LENGHT);
-	strcpy_s(str, CPU_INFO_LENGHT, _CPUBrandString);
+std::string Systeme::getCPU() {
+	std::string str(_CPUBrandString);	
 	return str;
 }
+
 
 Systeme::Systeme() {
 	setUsername();

@@ -50,14 +50,16 @@ public:
 
 	Systeme();
 
-	char* getUsername();
-	char* getComputerName();
-	char* getCPU();
-	char* getHwId();
+	std::string getUsername();
+	std::string getComputerName();
+	std::string getCPU();
+	std::string getHwId();
 	LANGID getLangId();
 	std::map<int, std::string> getLocalization();
 	std::vector<std::string> getDrives();
 	osVersion getOsVersion();
+
+	
 	 
 	bool setLocalization();
 	bool setUsername();

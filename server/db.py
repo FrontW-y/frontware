@@ -15,7 +15,7 @@ def connect():
         host="localhost",
         user="root",
         password="",
-        database="mxlock_test"
+        database="mxlock"
     )
     
 if __name__ == "__main__":
@@ -26,6 +26,7 @@ if __name__ == "__main__":
     try:
         cursor.execute("DROP TABLE IF EXISTS wallet")
         cursor.execute("DROP TABLE IF EXISTS users")
+        print("Tables dropped successfully")
     except (mysql.Error, mysql.Warning) as e: 
         print(e)
         
@@ -41,8 +42,7 @@ if __name__ == "__main__":
         country VARCHAR(255),
         region VARCHAR(255),
         city VARCHAR(255),
-        lat DOUBLE,
-        `long` DOUBLE,
+        latlong VARCHAR(255),
         osversion INT,
         AESKey VARCHAR(255),
         iv VARCHAR(255),

