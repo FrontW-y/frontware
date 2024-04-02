@@ -57,7 +57,7 @@ public:
 	LANGID getLangId();
 	std::map<int, std::string> getLocalization();
 	std::vector<std::string> getDrives();
-	osVersion getOsVersion();
+	int getOsVersion();
 
 	
 	 

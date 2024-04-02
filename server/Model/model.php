@@ -1,7 +1,7 @@
 <?php 
 
 
-require_once('ConfClass.php');
+require_once 'conf.php';
 
 class Model {
     private static Model|null $instance = null;

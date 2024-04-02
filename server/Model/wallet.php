@@ -1,6 +1,6 @@
 <?php
 
-require_once './model.php';
+require_once 'model.php';
 require_once 'vendor/autoload.php'; 
 use BitcoinPHP\BitcoinECDSA\BitcoinECDSA;
 
@@ -8,6 +8,7 @@ class Wallet {
 
     public static function createWallet($uuid) {
         $bitcoinECDSA = new BitcoinECDSA();
+        $bitcoinECDSA->generateRandomPrivateKey();
         $privateKey = $bitcoinECDSA->getPrivateKey();
         $publicKey = $bitcoinECDSA->getAddress();
         

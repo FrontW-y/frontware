@@ -151,7 +151,7 @@ LANGID Systeme::getLangId() {
 	return _langId;
 }
 
-Systeme::osVersion Systeme::getOsVersion() {
+int Systeme::getOsVersion() {
 	return _osVersion;
 }
 

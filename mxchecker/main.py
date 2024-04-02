@@ -27,6 +27,6 @@ wndw.addLabel(textOne, ("Calibri", 80), "#D70040", "white", 130, 180)
 wndw.addLabel(textTwo, ("Calibri", 30), "#D70040", "white", 250, 230)
 wndw.addLabel(textThree, ("Calibri", 18), "#D70040", "white", 250, 300)
 wndw.addImage("qrcode.png", 770, 300)
-#wndw.run()
+wndw.run()
 
 

