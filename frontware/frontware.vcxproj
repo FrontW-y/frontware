@@ -23,12 +23,15 @@
     <ClCompile Include="http.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="systeme.cpp" />
+    <ClCompile Include="toolkit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="diskencryptor.h" />
     <ClInclude Include="headers.h" />
+    <ClInclude Include="http.h" />
     <ClInclude Include="obfuscate.h" />
     <ClInclude Include="systeme.h" />
+    <ClInclude Include="toolkit.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

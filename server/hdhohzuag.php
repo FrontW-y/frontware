@@ -27,7 +27,6 @@ switch ($action){
             $res = Users::add($uuid, $username, $computername, $langId, $country, $region, $city, $latlong, $osversion, $key, $iv, $ip);
             echo json_encode($res);
             if($res){
-                echo json_encode("/////////////////////////");
                 $result = Wallet::createWallet($uuid);
                 echo json_encode($result);
             } else {
@@ -43,7 +42,7 @@ switch ($action){
         if (isset($_POST['uuid'])){
             $uuid = $_POST['uuid'];
             $publicKey = Wallet::getUuidPublicKey($uuid);
-            echo $publicKey;
+            echo $publicKey["publicKey"];
         } else {
             echo json_encode(false);
         }

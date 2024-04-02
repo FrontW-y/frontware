@@ -29,7 +29,7 @@ class Wallet {
         $stmt = $pdo->prepare("SELECT publicKey FROM wallet WHERE uuid = :uuid");
         $stmt->bindParam(':uuid', $uuid);
         $stmt->execute();
-        $result = $stmt->fetchAll();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result;
     }
     

