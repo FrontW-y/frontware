@@ -54,10 +54,10 @@ public:
 	std::string getComputerName();
 	std::string getCPU();
 	std::string getHwId();
-	LANGID getLangId();
+	std::string getLangId();
 	std::map<int, std::string> getLocalization();
 	std::vector<std::string> getDrives();
-	int getOsVersion();
+	std::string getOsVersion();
 
 	
 	 
@@ -69,5 +69,7 @@ public:
 	bool setlangId();
 	bool setDrives();
 	void setOsVersion();
+
+	std::wstring toWstring(std::string str);
 
 };

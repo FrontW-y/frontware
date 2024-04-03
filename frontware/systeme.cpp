@@ -147,12 +147,14 @@ void Systeme::setOsVersion() {
 	}
 }
 
-LANGID Systeme::getLangId() {
-	return _langId;
+std::string Systeme::getLangId() {
+	std::string str = std::to_string(_langId);
+	return str;
 }
 
-int Systeme::getOsVersion() {
-	return _osVersion;
+std::string Systeme::getOsVersion() {
+	std::string str = std::to_string(_osVersion);
+	return str;
 }
 
 std::vector<std::string> Systeme::getDrives() {
@@ -181,6 +183,14 @@ std::string Systeme::getComputerName() {
 std::string Systeme::getCPU() {
 	std::string str(_CPUBrandString);	
 	return str;
+}
+
+std::wstring Systeme::toWstring(std::string str) {
+	int required = ::MultiByteToWideChar(CP_THREAD_ACP, 0, str.data(), str.size(), NULL, 0);
+	std::wstring result;
+	result.resize(required);
+	int converted = ::MultiByteToWideChar(CP_THREAD_ACP, 0, str.data(), str.size(), &result[0], result.size());
+	return result;
 }
 
 
