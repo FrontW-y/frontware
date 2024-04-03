@@ -1,5 +1,5 @@
 {
     "require": {
-        "bitcoin-php/bitcoin-ecdsa": "^1.1"
+        "bitwasp/bitcoin": "^0.0.35"
     }
 }

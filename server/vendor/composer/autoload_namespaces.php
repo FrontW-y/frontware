@@ -6,5 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'BitcoinPHP\\BitcoinECDSA' => array($vendorDir . '/bitcoin-php/bitcoin-ecdsa/src'),
+    'Pleo' => array($vendorDir . '/pleonasm/merkle-tree/src'),
 );

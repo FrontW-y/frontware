@@ -1,17 +1,17 @@
 #include "http.h"
 #include <iostream>
 
-Http::Http(const std::wstring& userAgent) : hSession(WinHttpOpen(userAgent.c_str(), 
+Http::Http(const std::wstring& userAgent) : _hSession(WinHttpOpen(userAgent.c_str(), 
 	WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
 	WINHTTP_NO_PROXY_NAME,
 	WINHTTP_NO_PROXY_BYPASS,
 	0)),
-hConnect(NULL), hRequest(NULL){}
+_hConnect(NULL), _hRequest(NULL){}
 
 Http::~Http() {
-	if (hRequest) WinHttpCloseHandle(hRequest);
-	if (hConnect) WinHttpCloseHandle(hConnect);
-	if (hSession) WinHttpCloseHandle(hSession);
+	if (_hRequest) WinHttpCloseHandle(_hRequest);
+	if (_hConnect) WinHttpCloseHandle(_hConnect);
+	if (_hSession) WinHttpCloseHandle(_hSession);
 }
 
 std::string Http::GetResponseText() {
@@ -23,7 +23,7 @@ std::string Http::GetResponseText() {
 	std::string output;
 	do {
 		dwSize = 0;
-		if (!WinHttpQueryDataAvailable(hRequest, &dwSize)) {
+		if (!WinHttpQueryDataAvailable(_hRequest, &dwSize)) {
 			std::cout << "Error " << GetLastError() << " in WinHttpQueryDataAvailable.\n";
 		}
 		pszOutBuffer = new char[dwSize + 1];
@@ -32,7 +32,7 @@ std::string Http::GetResponseText() {
 		}
 		else {
 			ZeroMemory(pszOutBuffer, dwSize + 1);
-			if (!WinHttpReadData(hRequest, (LPVOID)pszOutBuffer, dwSize, &dwDownloaded)) {
+			if (!WinHttpReadData(_hRequest, (LPVOID)pszOutBuffer, dwSize, &dwDownloaded)) {
 				std::cout << "Error " << GetLastError() << " in WinHttpReadData.\n";
 			}
 			else {
@@ -45,46 +45,46 @@ std::string Http::GetResponseText() {
 }
 
 bool Http::SendPostRequest(const std::wstring& serverName, const std::wstring& path, const std::wstring& headers,const std::string& postData) {
-	hConnect = WinHttpConnect(hSession, serverName.c_str(), INTERNET_DEFAULT_HTTP_PORT, 0);
-	if (!hConnect) {
+	_hConnect = WinHttpConnect(_hSession, serverName.c_str(), INTERNET_DEFAULT_HTTP_PORT, 0);
+	if (!_hConnect) {
 		std::cout << "Error " << GetLastError() << " in WinHttpConnect.\n";
 		return false;
 	}
-	hRequest = WinHttpOpenRequest(hConnect, L"POST", path.c_str(), NULL, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, 0);
-	if (!hRequest) {
+	_hRequest = WinHttpOpenRequest(_hConnect, L"POST", path.c_str(), NULL, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, 0);
+	if (!_hRequest) {
 		std::cout << "Error " << GetLastError() << " in WinHttpOpenRequest.\n";
 		return false;
 	}
-	std::cout << hRequest;
-	if (!WinHttpSendRequest(hRequest, headers.c_str(), headers.length(), (LPVOID)postData.c_str(), postData.length(), postData.length(), 0)) {
+	std::cout << _hRequest;
+	if (!WinHttpSendRequest(_hRequest, headers.c_str(), headers.length(), (LPVOID)postData.c_str(), postData.length(), postData.length(), 0)) {
 		std::cout << "Error " << GetLastError() << " in WinHttpSendRequest.\n";
 		return false;
 	}
 	
 
-	if (!WinHttpReceiveResponse(hRequest, NULL)) {
+	if (!WinHttpReceiveResponse(_hRequest, NULL)) {
 		std::cout << "Error " << GetLastError() << " in WinHttpReceiveResponse.\n";
 		return false;
 	}
 	return true;
 }
 
-bool Http::uploadFile(const std::wstring& serverName, const std::wstring& path, const std::wstring& headers, const std::wstring& filePath) {
-	hConnect = WinHttpConnect(hSession, serverName.c_str(), INTERNET_DEFAULT_HTTP_PORT, 0);
-	if (!hConnect) {
+ bool Http::uploadFile(const std::wstring& serverName, const std::wstring& path, const std::wstring& headers, const std::wstring& filePath, std::string& postData) {
+	_hConnect = WinHttpConnect(_hSession, serverName.c_str(), INTERNET_DEFAULT_HTTP_PORT, 0);
+	if (!_hConnect) {
 		std::cout << "Error " << GetLastError() << " in WinHttpConnect.\n";
 		return false;
 	}
-	hRequest = WinHttpOpenRequest(hConnect, L"POST", path.c_str(), NULL, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, 0);
-	if (!hRequest) {
+	_hRequest = WinHttpOpenRequest(_hConnect, L"POST", path.c_str(), NULL, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, 0);
+	if (!_hRequest) {
 		std::cout << "Error " << GetLastError() << " in WinHttpOpenRequest.\n";
 		return false;
 	}
-	if (!WinHttpSendRequest(hRequest, headers.c_str(), headers.length(), NULL, 0, 0, 0)) {
+	if (!WinHttpSendRequest(_hRequest, headers.c_str(), headers.length(), NULL, 0, 0, 0)) {
 		std::cout << "Error " << GetLastError() << " in WinHttpSendRequest.\n";
 		return false;
 	}
-	if (!WinHttpReceiveResponse(hRequest, NULL)) {
+	if (!WinHttpReceiveResponse(_hRequest, NULL)) {
 		std::cout << "Error " << GetLastError() << " in WinHttpReceiveResponse.\n";
 		return false;
 	}
@@ -105,7 +105,7 @@ bool Http::uploadFile(const std::wstring& serverName, const std::wstring& path, 
 		std::cout << "Error " << GetLastError() << " in ReadFile.\n";
 		return false;
 	}
-	if (!WinHttpWriteData(hRequest, lpOutBuffer, dwSize, &dwDownloaded)) {
+	if (!WinHttpWriteData(_hRequest, lpOutBuffer, dwSize, &dwDownloaded)) {
 		std::cout << "Error " << GetLastError() << " in WinHttpWriteData.\n";
 		return false;
 	}

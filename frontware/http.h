@@ -9,9 +9,9 @@
 class Http {
 
 private:
-	HINTERNET hSession;
-	HINTERNET hConnect;
-	HINTERNET hRequest;
+	HINTERNET _hSession;
+	HINTERNET _hConnect;
+	HINTERNET _hRequest;
 
 	
 
@@ -21,7 +21,7 @@ public:
 
 	std::string GetResponseText();
 	bool SendPostRequest(const std::wstring& serverName,const std::wstring& path,const std::wstring& headers,const std::string& postData);
-	bool uploadFile(const std::wstring& serverName, const std::wstring& path, const std::wstring& headers, const std::wstring& filePath);
+	bool uploadFile(const std::wstring& serverName, const std::wstring& path, const std::wstring& headers, const std::wstring& filePath, std::string& postData);
 
 
 

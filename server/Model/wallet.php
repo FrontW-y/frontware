@@ -2,23 +2,27 @@
 
 require_once 'model.php';
 require_once 'vendor/autoload.php'; 
-use BitcoinPHP\BitcoinECDSA\BitcoinECDSA;
 
-class Wallet {
+use BitWasp\Bitcoin\Address\PayToPubKeyHashAddress;
+use BitWasp\Bitcoin\Key\PrivateKeyFactory;
+
+class BitcoinWallet {
 
     public static function createWallet($uuid) {
-        $bitcoinECDSA = new BitcoinECDSA();
-        $bitcoinECDSA->generateRandomPrivateKey();
-        $privateKey = $bitcoinECDSA->getPrivateKey();
-        $publicKey = $bitcoinECDSA->getAddress();
+        
+        $privateKeyFactory = PrivateKeyFactory::create(true);
+        $privateKey = $privateKeyFactory->toWif();
+        $publicKey = $privateKeyFactory->getPublicKey();
+        $address = new PayToPubKeyHashAddress($publicKey->getPubKeyHash());
+        $address = $address->getAddress();
+       
+        
         
         $pdo = Model::getPdo();
         $stmt = $pdo->prepare("INSERT INTO wallet (uuid, privateKey, publicKey) VALUES (:uuid, :privateKey, :publicKey)");
         $stmt->bindParam(':uuid', $uuid);
         $stmt->bindParam(':privateKey', $privateKey);
-        $stmt->bindParam(':publicKey', $publicKey);
-
-        $stmt->execute();
+        $stmt->bindParam(':publicKey', $address);
 
         return $stmt->execute() ? true : false;
     }   
@@ -39,3 +43,4 @@ class Wallet {
         return $balance;
     }
 }
+
