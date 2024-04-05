@@ -1,5 +1,7 @@
 #include "http.h"
+#include <vector>
 #include <iostream>
+#include <netlistmgr.h>
 
 Http::Http(const std::wstring& userAgent) : _hSession(WinHttpOpen(userAgent.c_str(), 
 	WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
@@ -69,13 +71,40 @@ bool Http::SendPostRequest(const std::wstring& serverName, const std::wstring& p
 	return true;
 }
 
- bool Http::uploadFile(const std::wstring& serverName, const std::wstring& path, const std::wstring& headers, const std::wstring& filePath, std::string& postData) {
+std::string Http::BuildRequestBody(const std::wstring& filePath, const std::string& postData, const std::string& boundary) {
+	std::string requestBody;
+	std::string boundaryStr = "--" + boundary + "\r\n";
+	requestBody.append(boundaryStr);
+	requestBody.append("Content-Disposition: form-data; name=\"file\"; filename=\"" + std::string(filePath.begin(), filePath.end()) + "\"\r\n");
+	requestBody.append("Content-Type: application/octet-stream\r\n\r\n");
+	requestBody.append(postData);
+	requestBody.append("\r\n");
+	requestBody.append("--" + boundary + "--\r\n");
+	return requestBody;
+}
+
+bool Http::uploadFile(const std::wstring& serverName, const std::wstring& path, const std::wstring& headers, const std::wstring& filePath, std::string& responseData, const std::string& postData) {
+	const char  *pszFormHeader = "----Boundary%s08X\r\nContent-Disposition: form-data; name=\"file\"; filename=\"%s\"\r\nContent-Type: application/octet-stream\r\n\r\n";
+	const char  *pszFormFooter = "\r\n----Boundary%s08X--\r\n";
+	wchar_t *wszFileHeader[256] = {0};
+	wchar_t wszFileContent[256] = {0};
+
+	return true;
+}
+
+bool Http::downloadFile(const std::wstring& serverName, const std::wstring& path, const std::wstring& headers, const std::wstring& filePath) {
+	FILE* file;
+	_wfopen_s(&file, filePath.c_str(), L"wb");
+	if (!file) {
+		std::cout << "Error " << GetLastError() << " in _wfopen.\n";
+		return false;
+	}
 	_hConnect = WinHttpConnect(_hSession, serverName.c_str(), INTERNET_DEFAULT_HTTP_PORT, 0);
 	if (!_hConnect) {
 		std::cout << "Error " << GetLastError() << " in WinHttpConnect.\n";
 		return false;
 	}
-	_hRequest = WinHttpOpenRequest(_hConnect, L"POST", path.c_str(), NULL, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, 0);
+	_hRequest = WinHttpOpenRequest(_hConnect, L"GET", path.c_str(), NULL, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, 0);
 	if (!_hRequest) {
 		std::cout << "Error " << GetLastError() << " in WinHttpOpenRequest.\n";
 		return false;
@@ -88,28 +117,48 @@ bool Http::SendPostRequest(const std::wstring& serverName, const std::wstring& p
 		std::cout << "Error " << GetLastError() << " in WinHttpReceiveResponse.\n";
 		return false;
 	}
-	HANDLE hFile = CreateFile(filePath.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	if (hFile == INVALID_HANDLE_VALUE) {
-		std::cout << "Error " << GetLastError() << " in CreateFile.\n";
-		return false;
-	}
-	DWORD dwSize = GetFileSize(hFile, NULL);
-	if (dwSize == INVALID_FILE_SIZE) {
-		std::cout << "Error " << GetLastError() << " in GetFileSize.\n";
-		return false;
-	}
+	DWORD dwSize = 0;
 	DWORD dwDownloaded = 0;
-	DWORD dwRead = 0;
-	LPVOID lpOutBuffer = new char[dwSize];
-	if (!ReadFile(hFile, lpOutBuffer, dwSize, &dwRead, NULL)) {
-		std::cout << "Error " << GetLastError() << " in ReadFile.\n";
-		return false;
-	}
-	if (!WinHttpWriteData(_hRequest, lpOutBuffer, dwSize, &dwDownloaded)) {
-		std::cout << "Error " << GetLastError() << " in WinHttpWriteData.\n";
-		return false;
-	}
-	CloseHandle(hFile);
+	LPSTR pszOutBuffer;
+	BOOL  bResults = FALSE;
+	DWORD dwSizeDownloaded;
+	do {
+		dwSize = 0;
+		if (!WinHttpQueryDataAvailable(_hRequest, &dwSize)) {
+			std::cout << "Error " << GetLastError() << " in WinHttpQueryDataAvailable.\n";
+		}
+		pszOutBuffer = new char[dwSize + 1];
+		if (!pszOutBuffer) {
+			dwSize = 0;
+		}
+		else {
+			ZeroMemory(pszOutBuffer, dwSize + 1);
+			if (!WinHttpReadData(_hRequest, (LPVOID)pszOutBuffer, dwSize, &dwDownloaded)) {
+				std::cout << "Error " << GetLastError() << " in WinHttpReadData.\n";
+			}
+			else {
+				fwrite(pszOutBuffer, 1, dwDownloaded, file);
+			}
+			delete[] pszOutBuffer;
+		}
+	} while (dwSize > 0);
+	fclose(file);
 	return true;
-}	
-
+}
+HRESULT Http::checkInternetConnection() {
+	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED); 
+	if (SUCCEEDED(hr)) {
+		INetworkListManager* pNetworkListManager = NULL;
+		hr = CoCreateInstance(CLSID_NetworkListManager, NULL, CLSCTX_ALL, IID_INetworkListManager, (void**)&pNetworkListManager);
+		if (SUCCEEDED(hr)) {
+			NLM_CONNECTIVITY nlmConnectivity = NLM_CONNECTIVITY_DISCONNECTED;
+			hr = pNetworkListManager->GetConnectivity(&nlmConnectivity);
+			if (SUCCEEDED(hr)) {
+				
+			}
+			pNetworkListManager->Release(); 
+		}
+		CoUninitialize(); 
+	}
+	return hr;
+}

