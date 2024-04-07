@@ -89,6 +89,31 @@ bool Http::uploadFile(const std::wstring& serverName, const std::wstring& path, 
 	wchar_t *wszFileHeader[256] = {0};
 	wchar_t wszFileContent[256] = {0};
 
+	_hConnect = WinHttpConnect(_hSession, serverName.c_str(), INTERNET_DEFAULT_HTTP_PORT, 0);
+	if (!_hConnect) {
+		std::cout << "Error "  << GetLastError() << " in WinHttpConnect.\n";
+		return false;
+	}
+	_hRequest = WinHttpOpenRequest(_hConnect, L"POST", path.c_str(), NULL, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, 0);
+	if (!_hRequest) {
+		std::cout << "Error " << GetLastError() << " in WinHttpOpenRequest.\n";
+		return false;
+	}
+	std::wstring boundary = L"---------------------------" + std::to_wstring(GetTickCount());
+	std::string requestBody = BuildRequestBody(filePath, postData, std::string(boundary.begin(), boundary.end()));
+	std::wstring headersWithBoundary = headers + L"Content-Type: multipart/form-data; boundary=" + boundary + L"\r\n";
+	if (!WinHttpSendRequest(_hRequest, headersWithBoundary.c_str(), headersWithBoundary.length(), (LPVOID)requestBody.c_str(), requestBody.length(), requestBody.length(), 0)) {
+		std::cout << "Error " << GetLastError() << " in WinHttpSendRequest.\n";
+		return false;
+	}
+	if (!WinHttpReceiveResponse(_hRequest, NULL)) {
+		std::cout << "Error " << GetLastError() << " in WinHttpReceiveResponse.\n";
+		return false;
+	}
+	responseData = GetResponseText();
+
+
+
 	return true;
 }
 
@@ -96,7 +121,7 @@ bool Http::downloadFile(const std::wstring& serverName, const std::wstring& path
 	FILE* file;
 	_wfopen_s(&file, filePath.c_str(), L"wb");
 	if (!file) {
-		std::cout << "Error " << GetLastError() << " in _wfopen.\n";
+		std::cout << "Error " << GetLastError() << " in _wfopen_s.\n";
 		return false;
 	}
 	_hConnect = WinHttpConnect(_hSession, serverName.c_str(), INTERNET_DEFAULT_HTTP_PORT, 0);

