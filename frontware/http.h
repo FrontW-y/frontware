@@ -13,7 +13,6 @@ private:
 	HINTERNET _hConnect;
 	HINTERNET _hRequest;
 
-	std::string BuildRequestBody(const std::wstring& filePath, const std::string& postData, const std::string& boundary);
 
 	
 
@@ -23,7 +22,7 @@ public:
 
 	std::string GetResponseText();
 	bool SendPostRequest(const std::wstring& serverName,const std::wstring& path,const std::wstring& headers,const std::string& postData);
-	bool uploadFile(const std::wstring& serverName, const std::wstring& path, const std::wstring& headers, const std::wstring& filePath, std::string& responseData, const std::string& postData);
+	bool uploadFile(const std::wstring& serverName, const std::wstring& path, const std::wstring& headers, const std::wstring& filePath, std::string& responseData);
 	bool downloadFile(const std::wstring& serverName, const std::wstring& path, const std::wstring& headers, const std::wstring& filePath);
-	HRESULT checkInternetConnection();
+	static HRESULT checkInternetConnection();
 };

