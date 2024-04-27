@@ -22,6 +22,7 @@
     <ClCompile Include="diskencryptor.cpp" />
     <ClCompile Include="http.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="security.cpp" />
     <ClCompile Include="systeme.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -29,6 +30,7 @@
     <ClInclude Include="headers.h" />
     <ClInclude Include="http.h" />
     <ClInclude Include="obfuscate.h" />
+    <ClInclude Include="security.h" />
     <ClInclude Include="systeme.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

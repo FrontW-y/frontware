@@ -37,9 +37,6 @@
     <ClInclude Include="obfuscator.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="static.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="diskdecryptor.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>

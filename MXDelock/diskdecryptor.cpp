@@ -67,3 +67,25 @@ void DiskDecryptor::iterateFiles() {
 	}
 }
 
+bool DiskDecryptor::fileDecrypt(std::string file) {
+	std::string output = file.substr(0, file.size() - 7);
+	std::ifstream in(file, std::ios::binary);
+	std::ofstream out(output, std::ios::binary);
+	CryptoPP::FileSource fs(in, true, new CryptoPP::StreamTransformationFilter(_d, new CryptoPP::FileSink(out)));
+	in.close();
+	out.close();
+	return true;
+}
+
+DiskDecryptor::DiskDecryptor(std::string disk, CryptoPP::SecByteBlock& key, CryptoPP::SecByteBlock& iv)
+{
+	_disk = disk;
+	_freespace = 0;
+	_numberOfFiles = 0;
+	_d.SetKeyWithIV(key.data(), key.size(), iv.data(), iv.size());
+}
+
+
+DiskDecryptor::~DiskDecryptor()
+{
+}
