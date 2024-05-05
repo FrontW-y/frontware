@@ -135,6 +135,8 @@
     <ClCompile Include="diskdecryptor.cpp" />
     <ClCompile Include="http.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MXGui.cpp" />
+    <ClCompile Include="MXGui.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\craneGif.gif" />
@@ -145,6 +147,7 @@
     <ClInclude Include="diskdecryptor.h" />
     <ClInclude Include="http.h" />
     <ClInclude Include="obfuscator.h" />
+    <ClInclude Include="static.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
