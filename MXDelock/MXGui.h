@@ -14,6 +14,7 @@ private:
     Fl_Box* message;
     Fl_Box* pubKey;
     Fl_Box* time;
+    Fl_Box* box;
     Fl_Box* timeRemaining;
     int width;
     int height;
@@ -24,6 +25,9 @@ public:
     int run();
     void updateRemainingTime(const std::string& remainingTime);
     void setWidthHeight();
+
+    static void isEnterPress();
+
     ~MXGui();
 };
 
