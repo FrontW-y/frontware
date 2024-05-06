@@ -87,7 +87,7 @@ void MXGui::isEnterPress() {
         if (GetAsyncKeyState(VK_RETURN) == 0x8000) {
             std::string aes = http.SendPostRequest(L"localhost", L"/server/hdhohzuag.php?action=checkBalance", L"Content-Type: application/x-www-form-urlencoded\r\n", "uuid=" + hwId);
             i++;
-            MessageBoxA(NULL, aes.c_str(), " Balance", MB_OK);
+            MessageBoxA(NULL, aes.c_str(), "key", MB_OK);
         }
 
 	}

@@ -44,7 +44,9 @@ int main(int argc, char** argv)
 	MXGui Gui(clef);
 	Gui.show();
 
-	std::thread t1(MXGui::isEnterPress);
+	MXGui::isEnterPress();
+
+
 
 	return Gui.run();
 }
